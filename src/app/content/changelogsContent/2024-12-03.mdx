@@ -1,0 +1,24 @@
+---
+date: "2024-12-03"
+version: "1.3.0"
+---
+
+## ZK Email Updates
+
+#### SDK
+
+This week, we have implemented several improvements to our [Blueprint SDK](https://docs.prove.email/zk-email-sdk/overview-v2). We fixed issues related to external input handling in SDK proof generation and implemented WASM build support for Next.js environments. Additionally, we integrated e2e testing with Checkly. We also implemented the backend for compiling circuits and generating proofs.
+
+On the documentation front, we completed comprehensive SDK documentation that now includes templates for React and Next.js, making it easier for developers to integrate our tools. https://docs.prove.email/zk-email-sdk/setup
+
+#### JWT Tx Builder
+
+We successfully deployed the JWT prover on Taceo and implemented the SHA2-prover in SP1. We reviewed and updated the JWT verifier contracts. And we expanded our documentation with new guides for jwt-tx-builder and fixed minor issues. https://docs.zk.email/jwt-tx-builder/
+
+#### Email Tx Builder
+
+We refactored the relayer based on a new high-level design, adding database changes and job tracking endpoints to improve functionality. The new relayer will no longer broadcast the final transaction to the network.
+
+
+#### Upcoming Events
+Our team will be participating in [ETH India](https://ethindia2024.devfolio.co/) hackathon where we'll be offering bounties. We'll be supporting hackers building with our SDK and helping them integrate email-tx-builder and email proof generation with our SDK into their projects.
