@@ -1,0 +1,30 @@
+---
+date: "2024-12-17"
+version: "1.3.0"
+---
+
+## ZK Email Updates
+
+#### SDK
+- Fixed tests and reorganized functions, improving maintainability and clarity.
+- Incorporated improved input handling from [relayer-utils](https://github.com/zkemail/relayer-utils) for enhanced proof verification flows.
+
+View the SDK on [GitHub](https://github.com/zkemail/zk-email-sdk-js).
+
+#### Registry
+- Introduced persistent storage for blueprint creation, making it easier to resume and complete workflows.
+- Disabled the [blueprint creation page](https://registry.zk.email/create/new) for unauthorised users.
+- Enabled pressing the `Enter` key to submit prompts in the AI regex generation tool.
+
+Check it out at the [Registry](https://registry.zk.email/).
+
+#### Email Transaction Builder
+- Deployed a self-hosted GitHub Actions runner to improve CI/CD reliability.
+- Fixed workflow formatting issues to maintain clean and efficient CI runs.
+
+Visit the [repository](https://github.com/zkemail/email-tx-builder/) to learn more.
+
+#### RISC Zero Integration
+- Implemented initial functionality for DKIM verification and regex pattern matching.
+
+Learn more about the implementation on [GitHub](https://github.com/zkemail/r0-zkEmail).
