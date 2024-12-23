@@ -111,5 +111,7 @@ export const getAllPostsMeta = async () => {
     posts.push(meta);
   }
 
+  await posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
   return posts;
 };
