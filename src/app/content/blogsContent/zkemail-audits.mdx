@@ -1,24 +1,27 @@
 ---
 title: "ZK Email Audits"
-date: 2024-12-17
+date: 2024-12-23
 authors: ["ZK Email Team"]
 type: Post
 draft: false
 slug: "zkemail-audit"
 category: "5m read"
 tags: ["security", "audit", "zk-email", "ethereum", "blockchain security"]
-description: "ZK Email has undergone multiple security audits by Matter Labs, Zellic, and Ackee Blockchain to ensure the security and reliability of our protocol."
+description: "ZK Email has completed multiple security audits by Matter Labs, Zellic, and Ackee Blockchain, ensuring the security and reliability of our protocol. All issues have been addressed in the latest releases, making our account recovery system ready for mainnet deployment."
 math: false
 ogImage: "/blog-media/zkemail-audit/banner.png"
 ---
 
-We're excited to announce that ZK Email has undergone multiple security audits by leading firms in the blockchain security space. These audits are crucial steps in ensuring the security and reliability of our ZK Email authentication system.
+ZK Email has successfully completed a series of security audits conducted by leading firms in the blockchain security space, including Matter Labs, Zellic, Ackee Blockchain, and ZKSecurity. These audits have thoroughly examined our protocol, focusing on critical components such as our zk-regex library, Circom circuits, Solidity smart contracts, and the account recovery system. 
+
+We have diligently addressed all identified issues, implementing fixes in the latest releases of our repositories. With these security enhancements in place, our ZK Email account recovery system is now ready for mainnet deployment, providing users with a secure and reliable way to recover their accounts using their email addresses.
+
 
 ## Matter Labs Audit
 
 <img src="/blog-media/zkemail-audit/matterlabs-audit.webp" alt="Matter Labs Audit Report"/>
 
-Matter Labs audited our zk-regex rewrite and ZKsync Solidity contracts in October 2024. Their comprehensive audit revealed:
+Matter Labs audited our [zk-regex](https://github.com/zkemail/zk-regex) rewrite and ZKsync Solidity contracts in October 2024. Their audit revealed:
 
 - 3 Critical issues
 - 3 High impact issues  
@@ -36,38 +39,60 @@ The following commits contain all fixes addressing the audit findings:
 - Fixes committed at [a60eb9](https://github.com/zkemail/clave-email-recovery/tree/a60eb9877f47f80459eefcf4639a350c96a43393) for clave-email-recovery
 - Fixes committed at [0327db](https://github.com/zkemail/ic-dns-oracle/tree/0327db9ac701a908139fcef2994cff8ed2d5533f) for ic-dns-oracle
 
+You can find the complete Matter Labs audit report [here](/blog-media/zkemail-audit/matterlabs-zkemail-audit-report.pdf).
+
 ## Zellic Audit
 
 <img src="/blog-media/zkemail-audit/zellic-audit.png" alt="Zellic Audit Report"/>
 
 Zellic completed an audit of our [ether-email-auth](https://github.com/zkemail/ether-email-auth) repository. This audit focused on the core functionality of our email authentication system. The audit revealed:
 
-- 1 Critical issue
+- 1 Critical issue 
 - 4 High impact issues
 - 5 Low impact issues
 - 2 Informational findings
 
-We've addressed and fixed the critical vulnerability and all high impact issues identified in the Zellic audit. Additionally, we've resolved several low impact issues.
+We've addressed and fixed the critical vulnerability and all high impact issues identified in the Zellic audit:
+
+- The critical maskedSubject attack vector and timestamp bug were fixed in [email-tx-builder@1455cd2](https://github.com/zkemail/email-tx-builder/commit/1455cd221dcb0849190879911688152669e4ed36)
+- The email address and domain regexes were updated in [zk-regex@f71b30b](https://github.com/zkemail/zk-regex/pull/68/commits/f71b30bde3fc2a2ba79fe151711552882ea4e707)
+- Additional fixes were made in email-tx-builder:
+  - [e84065d](https://github.com/zkemail/email-tx-builder/commit/e84065db4fa087b8d6152bb9682de71f6676e3ff)
+  - [9deaf80](https://github.com/zkemail/email-tx-builder/commit/9deaf80435502c4d9c1a77465a0e8195f749e63d) 
+  - [e449735](https://github.com/zkemail/email-tx-builder/commit/e449735740247b65cf13920e5b5d787893b72c5e)
+  - [0b21c2a](https://github.com/zkemail/email-tx-builder/commit/0b21c2a4ea30395d92288511553c183ee0f9176c)
+  - [4e2f119](https://github.com/zkemail/email-tx-builder/commit/4e2f119a428b694c1115e59dc52cfbe278c0e494)
+  - [b7fc2f6](https://github.com/zkemail/email-tx-builder/commit/b7fc2f6fc27084bc9662403deb699c8d7aab7948)
+- As well as in [email-recovery@003123c](https://github.com/zkemail/email-recovery/commit/003123cb35fb26e993a5015c2d4069e8a40d4abd)  
+- And [zk-email-verify@d718290](https://github.com/zkemail/zk-email-verify/commit/d718290d661e0ec9519a67a1dfa6bf764a9cf322)
+
+Additionally, we've resolved several low impact issues identified in the audit.
+
+You can find the complete Zellic audit report [here](/blog-media/zkemail-audit/zellic-audit-report.pdf).
 
 ## Ackee Blockchain Audit
 
-<img src="/blog-media/zkemail-audit/ackee-audit.png" alt="Ackee Audit Report"/>
+![Ackee Audit Report](/blog-media/zkemail-audit/ackee-audit.png)
 
-Ackee Blockchain conducted a comprehensive audit of our ZK Email protocol, focusing on the email recovery functionality. The audit was performed on commit 4e70316 and covered key contracts including EmailRecoveryManager, EmailRecoveryModule, UniversalEmailRecoveryModule, and associated libraries and handlers.
+Ackee Blockchain performed a thorough security review of our ZK Email protocol, focusing on the [email recovery](https://github.com/zkemail/email-recovery) project. They reviewed commit [4e70316](https://github.com/zkemail/email-recovery/commit/4e7031693d8e97cfcbc42b7d063a748a0a53b952), examining contracts like [EmailRecoveryManager](https://github.com/zkemail/email-recovery/blob/main/src/EmailRecoveryManager.sol), [EmailRecoveryModule](https://github.com/zkemail/email-recovery/blob/main/src/modules/EmailRecoveryModule.sol), [UniversalEmailRecoveryModule](https://github.com/zkemail/email-recovery/blob/main/src/modules/UniversalEmailRecoveryModule.sol), and related libraries and handlers.
 
-Their audit revealed several important findings across different severity levels:
+The audit identified issues of varying severity:
 
-- High Severity: Multiple vulnerabilities in the recovery configuration process and premature guardian configuration updates.
-- Medium Severity: Issues related to function parameter checks, potential Denial of Service (DoS) risks, selector collisions, and arbitrary Safe recovery calls.
-- Low Severity and Informational: Various code quality improvements, gas optimizations, and potential ERC-4337 violations.
+- High: Vulnerabilities in recovery configuration and premature guardian updates
+- Medium: Parameter check issues, DoS risks, selector collisions, arbitrary Safe recovery calls
+- Low & Informational: Code quality, gas optimizations, potential ERC-4337 violations
 
-The audit team provided detailed recommendations for each finding, which we have carefully considered and are in the process of implementing. These improvements will significantly enhance the security and reliability of our email recovery system.
+We addressed the findings in two revisions: 
+- [88371b8](https://github.com/zkemail/email-recovery/commit/88371b81a3dd4347dac8f2a5690c1434e86ff55f) 
+- [5b26a9a](https://github.com/zkemail/email-recovery/commit/5b26a9ade08257ccfcba14fe675f5343e306aa57)
+
+For a detailed overview of the audit findings, you can access the full [Ackee Blockchain Audit Report](/blog-media/zkemail-audit/ackee-blockchain-zkemail-email-recovery-report.pdf).
 
 ## ZKSecurity Audit
 
 <img src="/blog-media/zkemail-audit/zksecurity-audit.png" alt="ZKSecurity Audit Report"/>
 
-ZKSecurity performed a comprehensive audit of our Halo2 circuits, focusing on the zk-email-verify library and the zk-regex compiler. Their audit covered:
+ZKSecurity performed an audit of our circuits, focusing on the [zk-email-verify](https://github.com/zkemail/zk-email-verify) library and the [zk-regex](https://github.com/zkemail/zk-regex) compiler. Their audit covered:
 
 - The implementation of the ZK proofs
 - The security of the cryptographic primitives used
@@ -76,15 +101,14 @@ ZKSecurity performed a comprehensive audit of our Halo2 circuits, focusing on th
 
 The audit revealed several important findings, including high-severity issues related to regex soundness, compiler immaturity, and vulnerabilities in SHA256 templates. Medium-severity issues were also identified, such as potential information leakage and undocumented template assumptions.
 
-We've taken these findings seriously and are working diligently to address each issue. This includes refactoring code, improving documentation, enhancing our test suite, and implementing stricter constraints where necessary. These improvements will significantly enhance the security and reliability of our ZK Email system.
-
-## What We've Secured
+We've taken these findings seriously and are working diligently to address each issue. This includes refactoring code, improving documentation, our test suite, and implementing stricter constraints where necessary. These improvements will significantly enhance the security and reliability of our ZK Email system.
 
 Through these audits, we've significantly improved the security and reliability of:
 
-1. Our core email authentication system (ether-email-auth)
-2. The zk-regex library, which is crucial for parsing and proving email content
-3. Our Halo2 circuits, ensuring efficient and secure zero-knowledge proofs
+1. Our core email authentication system ([email-tx-builder](https://github.com/zkemail/email-tx-builder/))
+2. The [zk-regex](https://github.com/zkemail/zk-regex) library, which is crucial for parsing and proving email content. Fixes were implemented in [95cd901](https://github.com/zkemail/zk-email-verify/commit/95cd901f915f18b0fd142098bbac4e6e19c58c79) for zk-email-verify and [5396ec4](https://github.com/zkemail/zk-regex/commit/5396ec44cdf6a4579662b9442fc11210049ab520) for zk-regex
+
+You can find the complete ZKSecurity audit report [here](/blog-media/zkemail-audit/zksecurity-audit-report.pdf).
 
 ## Ongoing Audits
 
