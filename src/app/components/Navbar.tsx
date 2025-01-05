@@ -71,6 +71,12 @@ const NAV_ITEMS_DATA: {
       href: "/blog",
     },
     {
+      icon: "/assets/NavCaseStudies.png",
+      title: "Case Studies",
+      description: "Real-world integrations",
+      href: "/case-studies",
+    },
+    {
       icon: "/assets/NavPartners.png",
       title: "Partner",
       description: "Let's build the future",

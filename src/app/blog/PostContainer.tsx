@@ -4,11 +4,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAnimateIn } from "../hooks/useAnimateIn";
 
-const PostContainer = ({ post }) => {
+interface Post {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  category: string;
+  ogImage?: string;
+}
+
+interface PostContainerProps {
+  post: Post;
+  type?: 'blog' | 'case-study';
+}
+
+const PostContainer = ({ post, type = 'blog' }: PostContainerProps) => {
   const [sectionStyles, sectionRef] = useAnimateIn(undefined, { delay: 0 });
 
   return (
-    <Link href={`/blog/${post.slug}`} key={post.title}>
+    <Link href={`/${type === 'blog' ? 'blog' : 'case-studies'}/${post.slug}`} key={post.title}>
       <div
         ref={sectionRef}
         className="flex flex-col lg:flex-row gap-8"
@@ -18,7 +32,6 @@ const PostContainer = ({ post }) => {
           border: "1px solid var(--Grey-850, #272727)",
         }}
       >
-        {/*  // TODO: Remove the default image */}
         <Image
           width={278}
           height={156}
@@ -44,7 +57,14 @@ const PostContainer = ({ post }) => {
   );
 };
 
-const BlogsPage = ({ posts }: { posts: unknown }) => {
+interface BlogsPageProps {
+  posts: Post[];
+  title?: string;
+  subtitle?: string;
+  type?: 'blog' | 'case-study';
+}
+
+const BlogsPage = ({ posts, title = "Blogposts", subtitle = "Latest blogs from our team", type = 'blog' }: BlogsPageProps) => {
   const [sectionStyles, sectionRef] = useAnimateIn(undefined, { delay: 0 });
   return (
     <div
@@ -54,14 +74,14 @@ const BlogsPage = ({ posts }: { posts: unknown }) => {
     >
       <div>
         <p className="h3 text-left" style={{ textAlign: "left" }}>
-          Blogposts
+          {title}
         </p>
-        <p className="sutitle1">Latest blogs from our team</p>
+        <p className="sutitle1">{subtitle}</p>
       </div>
 
       <div className="flex flex-col gap-14 mt-20 mb-28">
         {posts.map((post) => {
-          return <PostContainer key={post.slug} post={post} />;
+          return <PostContainer key={post.slug} post={post} type={type} />;
         })}
       </div>
     </div>

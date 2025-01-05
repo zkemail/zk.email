@@ -19,6 +19,14 @@ const blogsContentDirectory = path.join(
   "blogsContent"
 );
 
+const caseStudiesContentDirectory = path.join(
+  process.cwd(),
+  "src",
+  "app",
+  "content",
+  "caseStudiesContent"
+);
+
 const changelogsContentDirectory = path.join(
   process.cwd(),
   "src",
@@ -112,4 +120,45 @@ export const getAllPostsMeta = async () => {
   }
 
   return posts;
+};
+
+/* For case studies page gets all case studies meta data */
+export const getAllCaseStudiesMeta = async () => {
+  const files = fs.readdirSync(caseStudiesContentDirectory);
+
+  let studies = [];
+
+  for (const file of files) {
+    const { meta } = await getCaseStudyBySlug(file);
+    studies.push(meta);
+  }
+
+  return studies;
+};
+
+/* For selected case study gets all the content */
+export const getCaseStudyBySlug = async (slug) => {
+  const realSlug = slug.replace(/\.mdx$/, "");
+  const filePath = path.join(caseStudiesContentDirectory, `${realSlug}.mdx`);
+
+  const fileContent = fs.readFileSync(filePath, { encoding: "utf8" });
+
+  const { frontmatter, content } = await compileMDX({
+    source: fileContent,
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [remarkMath, remarkGfm],
+        rehypePlugins: [
+          rehypeHighlight,
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behavior: "wrap" }],
+          [rehypeKatex, { output: "mathml" }],
+          rehypePrettyCode,
+        ],
+      },
+    },
+  });
+
+  return { meta: { ...frontmatter, slug: realSlug }, content };
 };
