@@ -3,6 +3,8 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Newsreader, Fustat } from "next/font/google";
+import { CSPostHogProvider } from "./providers";
+import PostHogPageView from "./pageview";
 const newsreader = Newsreader({ subsets: ["latin"] });
 const fustat = Fustat({ subsets: ["latin"] });
 
@@ -68,9 +70,12 @@ export default function RootLayout({
       <body
         className={`${newsreader.className} ${fustat.className} antialiased`}
       >
-        <Navbar />
-        {children}
-        <Footer />
+        <CSPostHogProvider>
+          <PostHogPageView />
+          <Navbar />
+          {children}
+          <Footer />
+        </CSPostHogProvider>
       </body>
     </html>
   );

@@ -13,6 +13,7 @@ const MARQUEE_ITEMS = [
 
 import dynamic from "next/dynamic";
 import { useAnimateIn } from "../hooks/useAnimateIn";
+import { posthog } from "posthog-js";
 
 const DynamicMarquee = dynamic(() => import("../components/Marquee"), {
   ssr: false,
@@ -69,7 +70,10 @@ const Hero = () => {
           style={buttonStyles}
         >
           <Button
-            href="https://docs.zk.email/introduction"
+            onClick={async () => {
+              await posthog.capture("$get_started_clicked");
+              window.open("https://docs.zk.email/introduction", "_blank");
+            }}
             color="secondary"
             endIcon={
               <Image

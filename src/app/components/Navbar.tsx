@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAnimateIn } from "../hooks/useAnimateIn";
+import { posthog } from "posthog-js";
 
 const SubItemDesktop = ({
   icon,
@@ -247,7 +248,10 @@ const Navbar = () => {
                   }}
                 >
                   <SubItemDesktop
-                    onClick={() => handleMouseLeave()}
+                    onClick={() => {
+                      posthog.capture(`$navbar_item_clicked:${item.title}`);
+                      handleMouseLeave();
+                    }}
                     {...item}
                   />
                 </div>
