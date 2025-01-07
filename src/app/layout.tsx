@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import { Newsreader, Fustat } from "next/font/google";
 import { CSPostHogProvider } from "./providers";
 import PostHogPageView from "./pageview";
+import React, { Suspense } from "react";
 const newsreader = Newsreader({ subsets: ["latin"] });
 const fustat = Fustat({ subsets: ["latin"] });
 
@@ -71,9 +72,11 @@ export default function RootLayout({
         className={`${newsreader.className} ${fustat.className} antialiased`}
       >
         <CSPostHogProvider>
-          <PostHogPageView />
-          <Navbar />
-          {children}
+          <Suspense fallback={<div>Loading...</div>}>
+            <PostHogPageView />
+            <Navbar />
+            {children}
+          </Suspense>
           <Footer />
         </CSPostHogProvider>
       </body>
