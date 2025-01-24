@@ -9,7 +9,20 @@ const nextConfig: NextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-
+  async redirects() {
+    return [
+      {
+        source: '/blog/zkemail-audits',
+        destination: '/blog/audits',
+        permanent: true,
+      },
+      {
+        source: '/blog/audit',
+        destination: '/blog/audits',
+        permanent: true,
+      }
+    ];
+  },
 };
 
 export default nextConfig;
