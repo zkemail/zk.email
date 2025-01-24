@@ -20,6 +20,21 @@ const nextConfig: NextConfig = {
         source: '/blog/audit',
         destination: '/blog/audits',
         permanent: true,
+      },
+      {
+        source: '/blog/recovery',
+        destination: '/blog/account-recovery',
+        permanent: true,
+      },
+      {
+        source: '/blog/safe',
+        destination: '/case-studies/safe-account-recovery',
+        permanent: true,
+      }, 
+      {
+        source: '/case-studies/safe',
+        destination: '/case-studies/safe-account-recovery',
+        permanent: true,
       }
     ];
   },
