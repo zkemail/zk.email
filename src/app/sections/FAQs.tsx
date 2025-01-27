@@ -66,10 +66,10 @@ const FAQs = () => {
     {
       question: "How can I do it anonymously?",
       answer:
-        "ZK Email leverages the principles of Zero Knowledge proofs and serverless execution within the browser to provide a verifiable yet anonymous way to confirm an emails contents and recipents . Zero Knowledge proofs allow provers to prove that they know or possess certain information without revealing the information itself to a verifer. In ZK Email, this technology is used to verify user identity and email content without exposing sensitive data to a server or other users. The serverless architecture means that all proof generation is executed entirely within the user`s browser.",
+        "ZK Email leverages the principles of Zero Knowledge proofs and serverless execution within the browser to provide a verifiable yet anonymous way to confirm an email's contents and recipients. Zero Knowledge proofs allow provers to prove that they know or possess certain information without revealing the information itself to a verifier. In ZK Email, this technology is used to verify user identity and email content without exposing sensitive data to a server or other users. The serverless architecture means that all proof generation is executed entirely within the user's browser.",
     },
     {
-      question: "Why don’t I need to trust you?",
+      question: "Why do I need to trust you?",
       answer:
         "The DKIM email signitures do not contain information we can use to sign other emails, all our code is open source and being audited",
     },
