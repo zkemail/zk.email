@@ -7,25 +7,37 @@ const ZKWhistleblowLogo = "/assets/ZKWhistleblow.png";
 
 export const PROJECTS = [
   {
-    title: "ZKP2P",
-    description:
-      "Peer to peer marketplace for decentralized onramp/offramp to Ethereum via Venmo, UPI, Garanti, and more.",
-    imgSrc: ZKP2PProjectLogo,
-    link: "https://zkp2p.xyz"
-  },
-  {
     title: "Account Recovery",
     description:
-      "Recover any safe wallet or smart wallet via email addresses",
+      "Recover any Safe wallet or smart wallet via email addresses",
     imgSrc: AccountRecoveryLogo,
     link: "https://recovery.zk.email"
   },
   {
     title: "Blueprint Registry",
     description:
-      "List of community submitted ZK Email blueprints that can be dropped into your project.",
+      "List of community submitted ZK Email blueprints to prove different kinds of emails",
     imgSrc: BlueprintRegistryLogo,
     link: "https://registry.zk.email"
+  },
+  {
+    title: "ZKP2P",
+    description:
+      "Peer to peer decentralized marketplaces on Ethereum. Trade domains with Namecheap emails and onramp/offramp via UPI, Garanti, and more.",
+    imgSrc: ZKP2PProjectLogo,
+    link: "https://zkp2p.xyz"
+  },
+  {
+    title: "Safe 2FA",
+    description: "Confirm any multisig transaction via an email.",
+    imgSrc: ZKWhistleblowLogo,
+    link: "https://zk.email/blog/2fa"
+  },
+  {
+    title: "Decentralized Oauth Login",
+    description: "Authorize any session key to scoped wallet access via emails.",
+    imgSrc: ZKWhistleblowLogo,
+    link: "https://oauth.emailwallet.org"
   },
   {
     title: "Proof of Twitter",
@@ -36,15 +48,9 @@ export const PROJECTS = [
   },
   {
     title: "Email Wallet",
-    description: "Send or receive assets just through your emails.",
+    description: "Send or receive assets just by sending an email.",
     imgSrc: EmailWalletLogo,
     link: "https://emailwallet.org"
-  },
-  {
-    title: "ZK Whistleblow",
-    description:
-      "Let the world know about any information received on your email without reveling your identity.",
-    imgSrc: ZKWhistleblowLogo,
   },
   {
     title: "ZK Proof of Github",
@@ -63,17 +69,5 @@ export const PROJECTS = [
     description: "Archives over a million old DKIM keys and selectors for various domains.",
     imgSrc: ZKWhistleblowLogo,
     link: "https://archive.zk.email"
-  },
-  {
-    title: "Decentralized Oauth Login",
-    description: "Authorize any session key to scoped wallet access via emails.",
-    imgSrc: ZKWhistleblowLogo,
-    link: "https://oauth.emailwallet.org"
-  },
-  {
-    title: "Safe 2FA",
-    description: "Confirm any multisig transaction via an email.",
-    imgSrc: ZKWhistleblowLogo,
-    link: "https://zk.email/blog/2fa"
   },
 ];

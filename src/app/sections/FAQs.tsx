@@ -61,22 +61,22 @@ const FAQs = () => {
     {
       question: "How do you selectively reveal content in an email?",
       answer:
-        "We can hide any information or selectively reveal any text, wether that’s the sender, receiver, subject, body etc using Regex. Regex is short for regular expression, this term represents sequence of characters that forms a search pattern, commonly used for string matching within text. It consists of a sequence of characters that define a search pattern, enabling complex searches, substitutions, and string manipulations. For example, in programming and text processing, regex can identify, extract, or replace specific text patterns, such as email addresses, dates, or phone numbers, by defining these patterns through a combination of literal characters and special symbols. In the context of ZK Email it is used to parse email headers and extract relevant information.",
+        "We can hide any information or selectively reveal any text, whether that's the sender, receiver, subject, or body etc. We do this via zero knowledge proofs of regex, which we invented. Regex is short for regular expression, a kind of search pattern used for string matching within text. It consists of a sequence of characters that define a search pattern, enabling complex searches, substitutions, and string manipulations. In the context of ZK Email, these let us parse email headers and bodies, extract relevant information, and reveal only data that the user wants to publish.",
     },
     {
-      question: "How can I do it anonymously?",
+      question: "How do you keep user data private and users anonymous?",
       answer:
-        "ZK Email leverages the principles of Zero Knowledge proofs and serverless execution within the browser to provide a verifiable yet anonymous way to confirm an emails contents and recipents . Zero Knowledge proofs allow provers to prove that they know or possess certain information without revealing the information itself to a verifer. In ZK Email, this technology is used to verify user identity and email content without exposing sensitive data to a server or other users. The serverless architecture means that all proof generation is executed entirely within the user`s browser.",
+        "ZK Email leverages zero knowledge proofs and client side proving in the browser to provide a verifiable yet anonymous way to confirm an emails contents and recipients. Zero knowledge proofs allow provers to prove that they know or possess certain information, without revealing the full email itself to a verifier or a server. In ZK Email, this technology is used to verify email address ownership, email contents, and more, without exposing sensitive data to other users. We allow browser-only client side proving options where possible, to ensure that users don't need to trust us with their email data to keep their data private. No email data is sent to our servers, unless users opt for server-side proofs.",
     },
     {
-      question: "Why don’t I need to trust you?",
+      question: "How much do I need to trust you?",
       answer:
-        "The DKIM email signitures do not contain information we can use to sign other emails, all our code is open source and being audited",
+        "We have put in significant effort to make our system trust-minimized. The only person who can generate valid ZK Email proof is the email recipient -- even the ZK Email team cannot fake a proof. We have had 4 audits on our code to ensure security, and all of our code is open source.",
     },
     {
       question: "How do you verify the email contents?",
       answer:
-        "We use the existing DKIM Signiture, almost all emails are signed by the sending domain server using an algorithm called DKIM. It can be summarized as this rsa_sign(sha256(from:..., to:..., subject:..., <body hash>,...), private key). Every time an email is sent we can verify the sender, receiver, the subject, the body by checking if the corresponding public key of the email address applied on the DKIM signiture returns the sha256(from:..., to:..., subject:..., <body hash>,...) a hash of the from, to subject, email details which we can check by rehashing",
+        "Almost all emails are signed by the sending domain server, using an algorithm called DKIM. It can be summarized as this rsa_sign(sha256(from:..., to:..., subject:..., <body hash>,...), private key). Every time an email is sent, ZK Email verifies this signature within a zero knowledge proof -- this can verify the sender, receiver, the subject, or parts of the body, while ensuring the public key corresponds to the correct one in DNS."
     },
   ];
 

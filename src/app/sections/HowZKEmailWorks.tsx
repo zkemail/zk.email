@@ -11,23 +11,23 @@ const FLOW_DETAILS = [
   {
     title: "Works with your existing inbox",
     description:
-      "Make proofs of any of your existing emails.",
+      "Make proofs of any of your existing emails, by simply signing in with Gmail or your own provider.",
     link: "https://docs.zk.email/architecture/dkim-verification",
     imgSrc: DKIMIcon,
   },
   {
-    title: "Regex and Hashing",
+    title: "Uses zero knowledge circuits for privacy",
     description:
-      "Keep data private, and check for the presence of any string or pattern in the email.",
-    link: "https://docs.zk.email/architecture/zk-proofs#3-perform-regex-matching-on-emails",
-    imgSrc: RegexIcon,
-  },
-  {
-    title: "Zero Knowledge Circuits",
-    description:
-      "Prove DKIM & regex calculations are correct, without revealing extra info.",
+      "Prove the email is valid and matches some pattern, while hiding private data.",
     link: "https://docs.zk.email/architecture/zk-proofs#zk-circuits-in-zk-email",
     imgSrc: ZKCircuitsIcon,
+  },
+  {
+    title: "Directly verifies on-chain",
+    description:
+      "Integrate with any wallet, smart contract, or off-chain app to verify email receipts or ownership.",
+    link: "https://docs.zk.email/architecture/on-chain",
+    imgSrc: RegexIcon,
   },
 ];
 

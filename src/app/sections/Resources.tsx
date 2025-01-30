@@ -52,20 +52,36 @@ type Resource = {
 
 const RESOURCES: Resource[] = [
   {
-    title: "ZK Email: ZK Email at Axiom House Presentation",
-    where: "EthDenver 2024",
-    url: "https://www.youtube.com/watch?v=KqyJxPsdx-0&ab_channel=ZKEmail",
-    date: "2024/10/31",
-    thumbnail: "https://i.ytimg.com/vi/KqyJxPsdx-0/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB_gmAAtAFigIMCAAQARhlIFYoSjAP&rs=AOn4CLD2tgYHcb2U4jgKBMpfeHH_xPmp_w",
+    title: "ZK Email: Fast Proofs and Production-Ready Account Recovery",
+    where: "Devcon 2024",
+    url: "https://www.youtube.com/watch?v=YvzdNMpynZM",
+    date: "2024/11/12",
+    thumbnail: "https://i.ytimg.com/vi/YvzdNMpynZM/hqdefault.jpg",
     contentType: "Talk",
+  },
+  {
+    title: "ZK Email: Account Recovery Audits Complete",
+    where: "Blog",
+    url: "https://zk.email/blog/audits",
+    date: "2024/12/23",
+    thumbnail: "https://zk.email/blog-media/zkemail-audit/zksecurity-audit.png",
+    contentType: "Blog",
   },
   {
     title: "ZK Email: Decentralized Email Login + Account Recovery + 2FA",
     where: "EthCC 2024",
     url: "https://www.youtube.com/watch?v=O1hv8gVTub8&ab_channel=ZKEmail",
     date: "2024/10/31",
-    thumbnail: "https://i.ytimg.com/vi/O1hv8gVTub8/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB_gmAAtAFigIMCAAQARhlIGUoZTAP&rs=AOn4CLDaTtCt8HcSlTSf5Ez6-eBuBQ1kFg",
+    thumbnail: "https://i.ytimg.com/vi/O1hv8gVTub8/hqdefault.jpg",
     contentType: "Talk",
+  },
+  {
+    title: "The DKIM Public Key Archive",
+    where: "Blog",
+    url: "https://zk.email/blog/archive",
+    date: "2024/10/05",
+    thumbnail: "https://zk.email/blog-media/archive/banner.webp",
+    contentType: "Blog",
   },
   {
     title: "ZK Email: Novel ZK Applications Unlocked by Portable Provenance",
@@ -105,6 +121,14 @@ const RESOURCES: Resource[] = [
     url: "https://www.youtube.com/embed/iMAaHEYyuxA?si=aUdeSJ60Dv57TjQI",
     date: "2023/01/26",
     thumbnail: "https://img.youtube.com/vi/iMAaHEYyuxA/0.jpg",
+    contentType: "Talk",
+  },
+  {
+    title: "ZK Email: ZK Email at Axiom House Presentation",
+    where: "EthDenver 2024",
+    url: "https://www.youtube.com/watch?v=KqyJxPsdx-0&ab_channel=ZKEmail",
+    date: "2024/10/31",
+    thumbnail: "https://i.ytimg.com/vi/KqyJxPsdx-0/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB_gmAAtAFigIMCAAQARhlIFYoSjAP&rs=AOn4CLD2tgYHcb2U4jgKBMpfeHH_xPmp_w",
     contentType: "Talk",
   },
   {

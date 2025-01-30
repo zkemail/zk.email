@@ -62,7 +62,7 @@ const Hero = () => {
           }}
         >
           Extensive set of open source SDKs, libraries, and
-          <br /> protocols that enables email-based identity
+          <br /> protocols that enable email-based identity
         </p>
         <div
           ref={buttonRef}
