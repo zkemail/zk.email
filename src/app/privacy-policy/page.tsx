@@ -87,6 +87,29 @@ const PrivacyPolicy = () => {
           These partners are contractually obligated to comply with our privacy
           policies. <br />
           <br />
+          4.1 DKIM Archive Service <br />
+          The DKIM Archive (archive.prove.email) is a specific service within ZK Email that requires additional privacy considerations: <br />
+          <br />
+          Information Access and Storage: <br />
+          - User Email Address: When signing in with Gmail, we only use your email address for display purposes within the platform. <br />
+          - Email Headers: With explicit consent, we access email headers to extract DKIM-Signature fields, specifically domains (d=) and selectors (s=). <br />
+          - DKIM Keys Archive: We maintain a public archive of historical DKIM keys built from contributed domains and selectors. <br />
+          - Email Hashes: We store cryptographic hashes of email content and corresponding DKIM signatures in our database. Note that these do not contain PII and are not linked to users in any way. <br />
+          <br />
+          Authentication and Security: <br />
+          - We use OAuth 2.0 for Google authentication. <br />
+          - OAuth tokens are stored only in the browser as JSON Web Tokens. <br />
+          - Our servers do not retain authentication tokens. <br />
+          <br />
+          User Control: <br />
+          - The &ldquo;Upload from Gmail&rdquo; feature is optional and requires explicit consent. <br />
+          - Users can revoke Gmail access permissions at any time. <br />
+          - Account deletion requests can be submitted to our support team. <br />
+          <br />
+          Public Information: <br />
+          - The DKIM key archive, containing domains and selectors, is publicly accessible. <br />
+          - No personal information is included in the public archive. <br />
+          <br />
           5. Security Measures <br />
           We employ robust security measures to protect your data: <br />
           <br />
