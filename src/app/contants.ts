@@ -44,7 +44,7 @@ export const PROJECTS = [
     description:
       "Prove you own a Twitter (X) username on-chain, via any email from Twitter/X.",
     imgSrc: ProofOfTwitterLogo,
-    link: "https://registry.zk.email/bb6b1400-8882-48db-a473-76daefef510b"
+    link: "https://registry.zk.email/0fe3a285-dc6e-4843-b9f6-5f3c27cd3847"
   },
   {
     title: "Email Wallet",
