@@ -42,9 +42,9 @@ export const PROJECTS = [
   {
     title: "Proof of Twitter",
     description:
-      "Prove you own a Twitter username on-chain, via any email from Twitter.",
+      "Prove you own a Twitter (X) username on-chain, via any email from Twitter/X.",
     imgSrc: ProofOfTwitterLogo,
-    link: "https://twitter.prove.email"
+    link: "https://registry.zk.email/bb6b1400-8882-48db-a473-76daefef510b"
   },
   {
     title: "Email Wallet",
