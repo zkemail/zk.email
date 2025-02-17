@@ -1,0 +1,86 @@
+---
+title: "Making Airdrops More Human"
+date: 2025-02-17
+authors: ["Tina, Aayush"]
+type: Post
+draft: false
+slug: "making-airdrops-more-human"
+category: "10m read"
+tags: ["allocation", "zero-knowledge proofs", "ZK Email", "personhood", "uniqueness", "verification"]
+description: "How ZKEmail could verify eligibility, personhood and claim tokens through your inbox."
+math: false
+ogImage: "/blog-media/making-airdrops-more-human/coverImg.webp"
+---
+*Special thanks to James Waugh, Violet, Jim, LDF, David Phelps*
+
+## The Current Chaotic State of Distributions
+
+<img src="/blog-media/making-airdrops-more-human/coverImg.webp" alt="Cover Image"/>
+<p className="text-center text-sm italic mb-6">User at 3AM Trying to Find Their Wallet</p>
+
+Picture this: It's 3 AM, and you're frantically searching through old folders. You're trying to remember the seed phrase for the wallet that holds the airdrop eligibility from the time you deposited into [Redacted] testnet. Your phone is lighting up with Discord notifications. Another community member is asking if you've claimed your airdrop yet. But you can't.
+
+Right now, airdrops are a funding mechanism that have only been able reward crypto native liquidity farmers. When airdrops were first incubated there had the potential to be a tool to provide funding for projects that aimed to raise capital directly from the public.
+
+As they've grown in popularity they've stayed concentrated to the same LPs and traders with [fine-grained knowledge of market conditions](https://vitalik.eth.limo/general/2021/08/22/prices.html). Despite this, they could still have the potential to be expanded to the larger masses and reach a larger audience, if they were accessible through more familiar mediums like email —- particularly ZKEmail.
+
+## A Loss in Brand Equity and Trust
+<img src="/blog-media/making-airdrops-more-human/panicingUsers.webp" alt="Users panicing"/>
+<p className="text-center text-sm italic mb-6">User upset confusing claim process and unclear communication about airdrop</p>
+
+The experience causes disappointment for users—particularly those who are eager to see the launch of their new favourite protocol's testnet and share the celebration of the airdrop with other community members. While the teams distributing airdrops often don't have malicious intentions, it results in damaged trust and degradation in the brand or reputation of your product and service, not just in the token itself.
+
+In Vitalik's [prices blog post](), he talks about how the process of participating in an airdrop should be fun. It should have game-like qualities without being frustrating but that's just it. Right now, it's solely frustrating for everyone that isn't a trader or LP. Sometimes it's even frustrating for them too.
+
+While a lot of ecosystems have a diverse range of people contributing in different ways (trading, code, design, ecosystem development, marketing) you rarely see that diversity of community members included in the wealth concentration of the airdrop itself.
+
+## So why do users outside of those who understand market conditions deeply, continuously get left behind?
+
+A majority of the distributions are calculated by scraping on-chain events that users have made on the protocol, with a specific wallet, or on the chain directly. The team then creates a merkle tree with a list of addresses that were pulled within a specific time horizon. While this has been a good attempt at creating fun and fair ways to reward community members, it often leaves a lot of active contributors left behind.
+
+But it doesn't have to be like this. There are alternatives to relying on wallets as a monogamous form of tracking activity and engagement within the community.
+
+<img src="/blog-media/making-airdrops-more-human/airdropDistribution.webp" alt="Airdrop distribution"/>
+<p className="text-center text-sm italic mb-6">Diagram of the average airdrop distribution in crypto </p>
+
+
+## Email as a Medium
+
+> "The form of a message (print, visual, musical, etc.) determines the ways in which that message will be perceived." - Marshall McLuhan
+
+Airdrops right now feel like this scammy crypto native thing but the reality is that it can be used for much more interesting use cases. Bringing more trust and credibility to them with more innovative communication around the airdrop itself, and distribution of the drop can hold more impact, if not more, value than the airdrop itself.
+
+Email is the perfect contact method to help solve this gap. It's your familiar friend. You've used it for school, to contact friends, to send flowers to the people you love, and forward your mum a funny article or newsletter.
+
+You use email every day and it stores the receipts of your life. Every time you buy something there's an email receipt. Everytime you create a new account online, you hold a receipt of the action. While navigating a wallet for airdrop claims is tedious, email is anything but.
+
+## How could it be setup? 
+
+### ZKEmail as a Solution
+
+Similar to how ZKEmail validates email ownership, we can also create proofs of genuine human participation. Users could generate proofs showing they've meaningfully engaged with the product over time - completing onboarding flows, providing feedback, using core features - without revealing exactly what actions they took by verifying the action in the email subject header. This creates credible signals of authentic participation.
+
+## How This Works
+
+**Drop directly to addresses:** Imagine you're a blogger with 50K Substack subscribers and you want to airdrop a token to your community to gate access to events, additional content and tokenize participation. You can send assets to an email address with Email Wallet—even if the recipient hasn't registered yet—and behind the scenes, the funds are held in a common smart contract. Later, the email owner can "claim" those funds by providing a proof that they control the email address. Once assets are deposited for a specific email address, the recipient will receive an email listing the assets they've received and explaining that, to "claim" them, they need to reply to that email. After doing so, they can use the email wallet's front-end to transfer the assets to another address or exchange.
+
+**Verify eligibility for an airdrop:** If you're a developer at a product and/or service launching an airdrop, users have the ability to verify their status for an airdrop by providing email files from supported exchanges (like Coinbase and Binance) and web services (like Amazon and Uber) using the Registry SDK. ZKEmail generates and verifies the proof client-side to complete the verification process while maintaining sybil resistance. For users, this means they have a straightforward way to prove they own legitimate accounts on major platforms (like Coinbase or Amazon) without having to share their full email address or sensitive information. *It's a privacy-preserving way for them to verify their identity to qualify for airdrops and the system will verify it's legitimate while keeping most of their email address private.*
+
+<img src="/blog-media/making-airdrops-more-human/registryUX.webp" alt="How our registry improves the current user experience"/>
+
+
+## What's the Impact This Could Make?
+
+- Improve diversity of community (and non-crypto native members)
+- Increase claim rate of distribution
+- Allow the airdrop to be more fair and fun
+
+## A Happier Alternative
+
+Nobody would disagree that modern airdrops are associated with a wide range of negative and confusing options. However, the way that airdrops and incentives are communicated to users represents a large part of the problem, and resolving the medium through which they are communicated lies at the heart of the issue. We believe that ZKEmail - and email as a medium have the potential to change this and we're excited to collaborate with product teams who share our vision for change.
+
+## What's Next
+
+**Ecosystem builders:** Looking to create a privacy-focused distribution that rewards community engagement? Connect with us through Twitter DM to explore how we can help scale your ecosystem.
+
+**Application developers:** Already building with the Registry SDK and Registry? Let us know and we'd love to support you.
