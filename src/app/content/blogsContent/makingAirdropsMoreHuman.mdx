@@ -62,15 +62,16 @@ Similar to how ZKEmail validates email ownership, we can also create proofs of g
 
 ## How This Works
 
-**Drop directly to addresses:** Imagine you're a blogger with 50K Substack subscribers and you want to airdrop a token to your community to gate access to events, additional content and tokenize participation. You can send assets to an email address with Email Wallet—even if the recipient hasn't registered yet—and behind the scenes, the funds are held in a common smart contract. Later, the email owner can "claim" those funds by providing a proof that they control the email address. Once assets are deposited for a specific email address, the recipient will receive an email listing the assets they've received and explaining that, to "claim" them, they need to reply to that email. After doing so, they can use the email wallet's front-end to transfer the assets to another address or exchange.
+**Drop directly to addresses:** Imagine you're a blogger with 50K Substack subscribers and you want to airdrop a token to your community to gate access to events, additional content and tokenize participation. You can send assets to an email address with [Email Wallet](https://github.com/zkemail/email-wallet) — even if the recipient hasn't registered yet—and behind the scenes, the funds are held in a common smart contract. Later, the email owner can "claim" those funds by providing a proof that they control the email address. Once assets are deposited for a specific email address, the recipient will receive an email listing the assets they've received and explaining that, to "claim" them, they need to reply to that email. After doing so, they can use the email wallet's front-end to transfer the assets to another address or exchange.
 
-**Verify eligibility for an airdrop:** If you're a developer at a product and/or service launching an airdrop, users have the ability to verify their status for an airdrop by providing email files from supported exchanges (like Coinbase and Binance) and web services (like Amazon and Uber) using the Registry SDK. ZKEmail generates and verifies the proof client-side to complete the verification process while maintaining sybil resistance. For users, this means they have a straightforward way to prove they own legitimate accounts on major platforms (like Coinbase or Amazon) without having to share their full email address or sensitive information. *It's a privacy-preserving way for them to verify their identity to qualify for airdrops and the system will verify it's legitimate while keeping most of their email address private.*
+**Verify eligibility for an airdrop:** If you're a developer at a product and/or service launching an airdrop, users have the ability to verify their status for an airdrop by providing email files from supported exchanges (like Coinbase and Binance) and web services (like [Amazon](https://registry.zk.email/230f5428-e1cd-480e-a553-df0c7124bc08) and [Uber](https://registry.zk.email/847a7e31-8043-48a7-85f9-9ed2729bf12c)) using the [Registry SDK](https://docs.prove.email/zk-email-sdk/). ZKEmail generates and verifies the proof client-side to complete the verification process while maintaining sybil resistance. For users, this means they have a straightforward way to prove they own legitimate accounts on major platforms (like Coinbase or Amazon) without having to share their full email address or sensitive information. *It's a privacy-preserving way for them to verify their identity to qualify for airdrops and the system will verify it's legitimate while keeping most of their email address private.*
 
 <img src="/blog-media/making-airdrops-more-human/registryUX.webp" alt="How our registry improves the current user experience"/>
 
 
 ## What's the Impact This Could Make?
 
+- Reduce negative sentiment likelihood and improve claim UX
 - Improve diversity of community (and non-crypto native members)
 - Increase claim rate of distribution
 - Allow the airdrop to be more fair and fun
@@ -81,6 +82,6 @@ Nobody would disagree that modern airdrops are associated with a wide range of n
 
 ## What's Next
 
-**Ecosystem builders:** Looking to create a privacy-focused distribution that rewards community engagement? Connect with us through Twitter DM to explore how we can help scale your ecosystem.
+**Ecosystem builders:** Looking to create a privacy-focused distribution that rewards community engagement? Connect with us through [Twitter](https://x.com/zkemail) DM to explore how we can help scale your ecosystem.
 
-**Application developers:** Already building with the Registry SDK and Registry? Let us know and we'd love to support you.
+**Application developers:** Already building with the [Registry SDK](https://docs.prove.email/zk-email-sdk/) and [Registry](https://registry.zk.email/)? Let us know and we'd love to support you.
