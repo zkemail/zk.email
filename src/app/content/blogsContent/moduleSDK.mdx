@@ -1,0 +1,103 @@
+---
+title: "Email Recovery Live for ModuleSDK"
+date: 2025-02-17
+authors: ["Tina, Aayush"]
+type: Post
+draft: false
+slug: "email-recovery-live-for-module-sdk"
+category: "10m read"
+tags: ["allocation", "zero-knowledge proofs", "ZK Email", "personhood", "uniqueness", "verification"]
+description: "How ZKEmail could verify eligibility, personhood and claim tokens through your inbox."
+math: false
+ogImage: "/blog-media/moduleSDK/coverImg.png"
+---
+
+
+<img src="/blog-media/moduleSDK/coverImg.png" alt="Cover Image"/>
+
+## Table of Contents
+
+- What's live
+- How it was built
+- Start deploying
+- What's Next
+- Links
+
+## What's live?
+
+Today, email recovery has been integrated into the Module SDK TypeScript library, now available for developers on Base mainnet, with testnet deployments on Base Sepolia and Sepolia for those who want to try it out.
+
+Rhinestone's ModuleSDK enables any wallet or application to share standardized account features (like social recovery or MFA) through ERC-7579, eliminating the need for each wallet to build these features independently.
+
+Developers can use the Module SDK Typescript library to build TypeScript applications that integrate smart account features like biometric authentication, social recovery, automated transfers, flash loans, and multi-factor authentication for ERC-7579 compatible accounts on Ethereum Mainnet with ERC 7579 accounts.
+
+## What's new since our last release?
+
+Our SDK has evolved, moving from earlier testing phases to a fully audited and attested system that is now live on Base Mainnet, Base Sepolia and Sepolia. Today, you can install and use your first module on your account, in this case a Safe7579 account and set guardians to recover an account using the Social Recovery Module.
+
+## Start deploying the SDK
+
+To install the ModuleSDK, you can install your first module and configure email recovery you can follow our guide [here](https://docs.zk.email/account-recovery/module-sdk-guide).
+
+## What does it allow you to do?
+
+- Implement email-based recovery without exposing user email addresses on-chain.
+- Integrate any ERC-7579 compatible wallet and add recovery functionality to any ERC-7579 compatible wallet, including Safe, ZeroDev's Kernel V3, and Biconomy's Nexus.
+- Define your own recovery parameters, timelock periods, and guardian requirements.
+
+
+<img src="/blog-media/moduleSDK/moduleSDKComponents.png" alt="Module SDK Components"/>
+<p className="text-center text-sm italic mb-6">Module SDK Components</p>
+
+## Technical Overview
+
+The core email recovery module is shared between Rhinestone and our existing deployments with Clave. We iterated with these teams to integrate ZK Email recovery contracts alongside running our open source relayer infrastructure to manage server side proof generation, and sending emails to, and receiving emails from guardians. We iterated on configurable guardian thresholds, guardian weights, and time locks. All those lessons went back into making the 7579 and Rhinestone module more production-ready.
+
+The most straightforward to implement is the ERC7579-compatible recovery module, which can be installed on any 7579-compatible smart account via ModuleSDK or Permissionless.js - no new code required. Since Clave does not support ERC7579, they opted to implement a lower level contract which is account implementation agnostic - this integration required an extra function to define which wallet functions are called when executing recovery.
+
+### What's Next
+
+We're excited to work with:
+
+- **App Developers:** To integrate account recovery into existing applications via the ModuleSDK. You can quickly integrate account recovery features and build new functionality across multiple smart account implementations through a unified interface.
+- **Wallet teams:** To natively integrate account recovery into their SDKs and demos.
+
+We're building the next generation of wallets and we're excited to build alongside more teams looking to integrate email recovery.
+
+## Links
+
+- [Module SDK Github Repository](https://github.com/rhinestonewtf/module-sdk)
+- [Private Email Recovery](https://blog.rhinestone.wtf/private-email-recovery-with-zk-email-3405ce4d866e)
+- [Account Recovery](https://prove.email/blog/account-recovery)
+- [Rhinestone ModuleKit](https://github.com/rhinestonewtf/modulekit)
+
+### Internal Notes
+
+- [https://blog.rhinestone.wtf/private-email-recovery-with-zk-email-3405ce4d866e](https://blog.rhinestone.wtf/private-email-recovery-with-zk-email-3405ce4d866e)
+- [https://prove.email/blog/account-recovery](https://prove.email/blog/account-recovery)
+- Goal of article: Increase awareness that the modules are audited, attested and easily accessible via the ModuleSDK
+- Rhinestone are the authors of ERC7579 and specialise in building modular smart account infrastructure
+- We wanted to build a recovery module, we decided on ERC7579 and that led us to the Rhinestone partnership. They have been helping us develop it over the past few months.
+- They build smart account modules themselves. They also build developer tooling for module developers (which we used to develop our 7579 module - specifically ModuleKit). And they have a typescript SDK (ModuleSDK) which allows developers to install various modules into their 7579-compatible accounts, which we are now integrated into and Saul is writing the docs for
+- ModuleKit - developer tooling for building modules that we use [ModuleKit](https://github.com/rhinestonewtf/modulekit)
+- ModuleSDK - TS SDK for using 7579 modules which we are now implemented in [ModuleSDK](https://github.com/rhinestonewtf/module-sdk)
+- [Rhinestone website](https://www.rhinestone.wtf/)
+
+**Feedback from Rhinestone**
+
+- Smart account modularity
+- ERC 7579
+- Works interoperability with different smart account implementations
+- Work to have released by end of week
+- Trustless and privacy element
+- Trustless alternative to magic and embedded signers that do key management
+- Safe account implementation and works out of the box
+  - If a user has one of the accounts
+- Biconomy SDKs and other teams
+- Less general developer audience and the ones that are using these SDKs
+  - [https://npmtrends.com/@alchemy/aa-core-vs-@safe-global/protocol-kit-vs-@zerodev/sdk-vs-magic-sdk-vs-permissionless](https://npmtrends.com/@alchemy/aa-core-vs-@safe-global/protocol-kit-vs-@zerodev/sdk-vs-magic-sdk-vs-permissionless)
+  - Mainly ask Permissionless, Biconomy, Safe, Pimlico (Permissionless)
+  - [https://docs-gasless.biconomy.io/](https://docs-gasless.biconomy.io/)
+
+
+<img src="/blog-media/moduleSDK/npmTrends.png" alt="Cover Image"/>
