@@ -39,8 +39,15 @@ const changelogsContentDirectory = path.join(
 export const getPostBySlug = async (slug) => {
   const realSlug = slug.replace(/\.mdx$/, "");
   const filePath = path.join(blogsContentDirectory, `${realSlug}.mdx`);
+  let fileContent;
 
-  const fileContent = fs.readFileSync(filePath, { encoding: "utf8" });
+  try { 
+    console.log(filePath);
+    fileContent = fs.readFileSync(filePath, { encoding: "utf8" });
+  } catch (error) {
+    console.log(error);
+    return { meta: { slug: realSlug }, content: "" };
+  }
 
   const { frontmatter, content } = await compileMDX({
     source: fileContent,
@@ -142,8 +149,14 @@ export const getAllCaseStudiesMeta = async () => {
 export const getCaseStudyBySlug = async (slug) => {
   const realSlug = slug.replace(/\.mdx$/, "");
   const filePath = path.join(caseStudiesContentDirectory, `${realSlug}.mdx`);
+  let fileContent;
 
-  const fileContent = fs.readFileSync(filePath, { encoding: "utf8" });
+  try {
+    fileContent = fs.readFileSync(filePath, { encoding: "utf8" });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 
   const { frontmatter, content } = await compileMDX({
     source: fileContent,

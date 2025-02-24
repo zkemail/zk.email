@@ -2,9 +2,15 @@
 
 import Loader from "@/app/components/Loader";
 import { useAnimateIn } from "@/app/hooks/useAnimateIn";
+import { redirect } from "next/navigation";
 
 const PostContent = ({ meta, content }) => {
     const [sectionStyles, sectionRef] = useAnimateIn(true, { delay: 100 });
+    let date = "N/A";
+
+    if (!content) {
+        return redirect("/page-not-found")
+    }
 
     if (!meta) {
         return <Loader />
@@ -19,7 +25,7 @@ const PostContent = ({ meta, content }) => {
                 {meta.description}
             </p>
             <p className="subtitle2" style={{ color: '#A8A8A8' }} >
-                {new Date(meta.date).toISOString().split("T")[0]} <span className="mx-2">◆</span> {meta.category}
+                {date} <span className="mx-2">◆</span> {meta.category}
             </p>
         </div>
         <article className={`prose lg:prose-xl prose-invert dark:prose-invert-xl max-w-full mt-16`}>

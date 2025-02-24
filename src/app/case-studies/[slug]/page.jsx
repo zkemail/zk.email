@@ -3,8 +3,13 @@ import 'highlight.js/styles/github-dark.css'
 import PostContent from '../../blog/[slug]/postContent'
 
 const getPageContent = async (slug) => {
-  const { meta, content } = await getCaseStudyBySlug(slug);
-  return { meta, content };
+  try {
+    const { meta, content } = await getCaseStudyBySlug(slug);
+    return { meta, content };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 export async function generateMetadata({ params }) {
@@ -30,7 +35,18 @@ export async function generateMetadata({ params }) {
 
 const Page = async ({ params }) => {
   const { slug } = await params
-  const { meta, content } = await getPageContent(slug);
+
+  try {
+    const { meta, content } = await getPageContent(slug);
+  } catch (error) {
+    console.log(error);
+    return redirect("/page-not-found")
+  }
+
+  if (!content) {
+    return redirect("/page-not-found")
+  }
+
   return <div className='container-width container-padding m-auto my-40'><PostContent meta={meta} content={content} /></div>
 };
 

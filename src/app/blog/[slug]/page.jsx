@@ -3,14 +3,25 @@ import 'highlight.js/styles/github-dark.css'
 import PostContent from './postContent'
 
 const getPageContent = async (slug) => {
-  const { meta, content } = await getPostBySlug(slug);
-  return { meta, content };
+  try {
+    const { meta, content } = await getPostBySlug(slug);
+    return { meta, content };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
+  let meta;
 
-  const { meta } = await getPageContent(slug);
+  try {
+    meta = await getPageContent(slug);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 
   return {
     title: meta.title,
