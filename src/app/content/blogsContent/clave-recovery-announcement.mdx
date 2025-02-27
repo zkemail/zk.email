@@ -1,0 +1,64 @@
+# Clave Releases ZKEmail Recovery Feature
+
+![ZKEmail and Clave logos side by side with 'x' between them on a dark gradient background](cover.png)
+
+## Table of Contents
+* Introducing Email Recovery
+* How it was built
+* How Email Recovery works
+* Download Clave
+* Links
+
+## Introducing Email Recovery
+
+Clave now offers two ways to recover your wallet:
+1. **Email Recovery** - Recover your wallet using your verified email address
+2. **Email Guardians** - Using trusted contacts as guardians via email 
+
+![Recovery Process showing 10 steps from opening the app to completing recovery after 48 hours](recovery.png)
+
+*A full user flow of the email recovery and email guardian features.*
+
+## How It Was Built
+
+The Clave and ZKEmail teams engaged in a year-long collaboration to successfully adapt and deploy ZKEmail smart contracts on ZKSync Era. This work involved three main components:
+
+1. Developing a Clave-specific module that implements the ZKEmail proof system
+2. Deploying modified ZKEmail smart contracts on ZKSync
+3. Creating custom contracts to fill functionality gaps in the ZKSync ecosystem
+
+The [ZKEmail smart contract](https://github.com/zkemail/email-recovery) was built to be agnostic to individual contract wallet implementations, ensuring no direct dependency between the Clave wallet and ZKEmail smart contracts.
+
+The Clave wallet includes a specialized [module contract](https://github.com/getclave/clave-email-recovery) that implements the wallet recovery feature provided by ZKEmail. Users apply this module to their Clave account during initial setup of the wallet recovery feature.
+
+Once configured, the Clave wallet's module contract serves as a bridge, managing communication between the Clave wallet and the ZKSync-adapted ZKEmail contracts. When the ZKEmail recovery process completes, it triggers the recover function in the Clave wallet's module.
+
+## How Email Recovery Works
+
+Users begin by downloading the Clave app (for either iOS or Android) and creating their account, which automatically assigns them a unique username.clv.eth address. After enabling Face ID or biometric authentication, users can proceed to set up their email guardian.
+
+### Adding Email Guardians
+
+From the Backup settings view, users select the option to add an email guardian and enter their email. The app then sends a verification email to ensure the user has access to the account. Users need to reply to this email with a confirmation message, and the app confirms their email guardian.
+
+### Recovering accounts
+
+If recovery is ever needed, the process is equally intuitive. Users select the "Recover with Email" option and enter their registered email address. The app displays a warning message to ensure users understand the implications of starting a recovery process, particularly if they still have access to their original device.
+
+After acknowledging these warnings, users receive a confirmation email and must reply to verify the recovery request. The app provides clear status updates throughout the process, and after a mandatory 48-hour security period (which helps prevent unauthorized access attempts), users can complete the recovery process and regain access to their wallet.
+
+## Conclusion
+
+As email recovery becomes a more popular request among users, Clave has emerged as one of the first wallets to implement the feature with us. Email recovery on Clave solidifies a long-anticipated promise of email-based wallet recovery, eliminating reliance on seed phrases and making Ethereum self-custody more secure.
+
+If you're a wallet developer interested in support email recovery, [our contract architecture](https://github.com/zkemail/email-recovery) provides a reference implementation that other developers can build upon, accelerating adoption of email recovery across the ecosystem. ZKEmail offers an integration path for wallet developers looking to integrate email recovery into their existing wallet flows.
+
+## Download Clave
+
+Visit the [App Store](https://apps.apple.com/us/app/clave-smart-wallet/id6449253761) or [Google Play](https://play.google.com/store/apps/details?id=com.clave.mobile) store today to download the wallet and test the integration today.
+
+Want to learn more about the proving powering the guardian feature? Check out our [recent account recovery blog](https://prove.email/blog/account-recovery).
+
+## Links
+* [Account Recovery](https://prove.email/blog/account-recovery)
+* [Clave Account Recovery](https://blog.getclave.io/p/universal-recovery-a-social-recovery)
