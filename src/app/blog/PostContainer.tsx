@@ -65,7 +65,8 @@ interface BlogsPageProps {
 }
 
 const BlogsPage = ({ posts, title = "Blogposts", subtitle = "Latest blogs from our team", type = 'blog' }: BlogsPageProps) => {
-  const [sectionStyles, sectionRef] = useAnimateIn(undefined, { delay: 0 });
+  const [sectionStyles, sectionRef] = useAnimateIn(true, { delay: 0 });
+
   return (
     <div
       ref={sectionRef}
