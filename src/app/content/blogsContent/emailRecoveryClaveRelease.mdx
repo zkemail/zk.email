@@ -8,7 +8,7 @@ slug: "email-recovery-clave-release"
 category: "5m read"
 tags: ["ZK Email", "dkim", "whistleblowing", "RSA"]
 description: ""
-
+ogImage: "/blog-media/claveRelease/ogImage.png"
 ---
 
 ## Table of Contents
@@ -32,17 +32,17 @@ Clave now offers two ways to recover your wallet:
 
 ## How It Was Built
 
-The Clave and ZKEmail teams engaged in a year-long collaboration to successfully adapt and deploy ZKEmail smart contracts on ZKSync Era. This work involved three main components:
+The Clave and ZKEmail teams engaged in a year-long collaboration to successfully adapt and deploy [ZKEmail smart contracts](https://github.com/zkemail/email-recovery) on ZKSync Era. This work involved three main components:
 
-1. Developing a Clave module that implements the ERC7579 ZK Email specification
-2. Deploying modified ZK Email smart contracts on ZKSync
+1. Developing a Clave-specific module that implements the ZKEmail proof system
+2. Deploying modified ZKEmail smart contracts on ZKSync
 3. Creating custom contracts to fill functionality gaps in the ZKSync ecosystem
 
-Following the ERC7579 standard, the [ZKEmail smart contract](https://github.com/zkemail/email-recovery) was built to be agnostic to individual contract wallet implementations, ensuring no direct dependency between the Clave wallet and ZKEmail smart contracts.
+The ZKEmail smart contract was built to be agnostic to individual contract wallet implementations, ensuring no direct dependency between the Clave wallet and ZKEmail smart contracts.
 
-The Clave wallet includes a specialized module contract that implements the wallet recovery feature provided by ZKEmail. Users apply this module to their Clave account during initial setup of the wallet recovery feature.
+The Clave wallet includes a specialized [module contract](https://github.com/getclave/clave-email-recovery) that implements the wallet recovery feature provided by ZKEmail. Users apply this module to their Clave account during initial setup of the wallet recovery feature.
 
-Once configured, the Clave wallet's [module contract](https://github.com/getclave/clave-email-recovery) serves as a bridge, managing communication between the Clave wallet and the ZKSync-adapted ZKEmail contracts. When the ZKEmail recovery process completes, it triggers the recover function in the Clave wallet's module.
+Once configured, the Clave wallet's module contract serves as a bridge, managing communication between the Clave wallet and the ZKSync-adapted ZKEmail contracts. When the ZKEmail recovery process completes, it triggers the recover function in the Clave wallet's module.
 
 ## How Email Recovery Works
 
