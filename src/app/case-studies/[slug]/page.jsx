@@ -35,9 +35,10 @@ export async function generateMetadata({ params }) {
 
 const Page = async ({ params }) => {
   const { slug } = await params
-
+  let meta, content;
+  
   try {
-    const { meta, content } = await getPageContent(slug);
+    ({ meta, content } = await getPageContent(slug));
   } catch (error) {
     console.log(error);
     return redirect("/page-not-found")
