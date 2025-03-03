@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 
 const PostContent = ({ meta, content }) => {
     const [sectionStyles, sectionRef] = useAnimateIn(true, { delay: 100 });
-    let date = "N/A";
 
     if (!content) {
         return redirect("/page-not-found")
@@ -28,7 +27,7 @@ const PostContent = ({ meta, content }) => {
                 {meta.authors.map((author) => (
                     <span key={author}>{author}</span>
                 ))} <span className="mx-2">◆</span>
-                {new Date(meta.date).toISOString().split("T")[0]} <span className="mx-2">◆</span> {meta.category}
+                {new Date(meta.date).toISOString().split("T")[0] ?? "N/A"} <span className="mx-2">◆</span> {meta.category}
             </p>
         </div>
         <article className={`prose lg:prose-xl prose-invert dark:prose-invert-xl max-w-full mt-16`}>
