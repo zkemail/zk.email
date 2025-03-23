@@ -45,11 +45,11 @@ const Hero = () => {
           }}
         >
           <span className="hidden sm:inline">
-            Bringing on-chain trust to the masses through intuitive email
-            integrations
+            Building trustable identity through intuitive, private email
+            verifications
           </span>
           <span className="sm:hidden">
-            Bringing trust through intuitive email integration
+            Bringing trust through intuitive email proofs
           </span>
         </p>
         <p
