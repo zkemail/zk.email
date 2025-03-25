@@ -64,7 +64,12 @@ There were a lot of cool results from this analysis that we will publish shortly
 
 ## The Reverse Engineer
 
-This is where the real magic starts. The whole problem we wanted to solve in the first place, was how to verify old emails and recover old, expired public keys. It turns out that there's a very interesting way to take two old signatures, and rederive an old public key! Here's concretely how:
+This is where the real magic starts. The whole problem we wanted to solve in the first place, was how to verify old emails and recover old, expired public keys. 
+
+![Graph showing which Clinton emails can be verified with archived DKIM keys](/blog-media/archive/clinton.png)
+*A visualization of which Clinton emails could be cryptographically verified with current values in DNS (green) versus those that cannot be verified due to missing keys (red).*
+
+It turns out that there's a very interesting way to take two old signatures, and rederive an old public key! Here's concretely how:
 
 Recall this is the format of RSA Signature and verification process, where e = 65537 usually:
 
