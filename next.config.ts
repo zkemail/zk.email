@@ -32,6 +32,21 @@ const nextConfig: NextConfig = {
         permanent: true,
       }, 
       {
+        source: '/blog/jupiter',
+        destination: '/blog/jupiter-and-soft-kyc-at-scale',
+        permanent: true,
+      }, 
+      {
+        source: '/blog/jup',
+        destination: '/blog/jupiter-and-soft-kyc-at-scale',
+        permanent: true,
+      }, 
+      {
+        source: '/blog/kyc',
+        destination: '/blog/jupiter-and-soft-kyc-at-scale',
+        permanent: false,
+      }, 
+      {
         source: '/case-studies/safe',
         destination: '/case-studies/safe-account-recovery',
         permanent: true,
