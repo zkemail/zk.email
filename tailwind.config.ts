@@ -73,6 +73,17 @@ const config: Config = {
               fontWeight: 300,
               fontStyle: "normal",
               borderColor: '#606060'
+            },
+            '.footnotes br': {
+              marginBottom: '1.5em',
+              content: '""',
+              display: 'block',
+            },
+            '.footnotes p': {
+              marginBottom: '1.5em',
+            },
+            '.footnotes li': {
+              marginBottom: '1.5em',
             }
           },
         },
