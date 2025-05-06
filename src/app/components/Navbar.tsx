@@ -308,8 +308,8 @@ const Navbar = () => {
         {hoveredSection && (
           <div className="flex flex-col w-full" style={animateInStyles}>
             {Object.entries(NAV_ITEMS_DATA).map(([section, items]) => (
-              <div key={section} className="mb-8">
-                <h2 className="h4 font-semibold mb-4 capitalize">{section}</h2>
+              <div key={section} className="mb-6">
+                <h2 className="h5 font-semibold mb-2 capitalize">{section}</h2>
                 {items.map((item, index) => (
                   <Link
                     href={item.href}
@@ -317,7 +317,7 @@ const Navbar = () => {
                     key={index}
                     className="block mb-4"
                   >
-                    <p className="h6 font-medium" style={{ color: "#F5F3EF" }}>
+                    <p className="h7 font-medium" style={{ color: "#F5F3EF" }}>
                       {item.title}
                     </p>
                     <p className="subtitle2 text-gray-400">
