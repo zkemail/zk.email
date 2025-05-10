@@ -7,7 +7,7 @@ import { useAnimateIn } from "../hooks/useAnimateIn";
 type ChangelogType = { date: string; content: string };
 
 const ChangelogsContent = ({ changeLogs }: { changeLogs: ChangelogType[] }) => {
-  const [sectionStyles, sectionRef] = useAnimateIn(undefined, { delay: 0 });
+  const [sectionStyles, sectionRef] = useAnimateIn(true, { delay: 0 });
 
   return (
     <div
