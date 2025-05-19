@@ -411,7 +411,7 @@ const PartnersAndProjects = () => {
         <div className="project-cards-container">
           {PROJECTS.slice(0, 3).map((project, index) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
-            const [cardStyles, cardRef] = useAnimateIn(undefined, {
+            const [cardStyles, cardRef] = useAnimateIn(true, {
               delay: 100 + index * 100,
             });
 
