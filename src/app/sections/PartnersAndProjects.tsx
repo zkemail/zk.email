@@ -58,20 +58,13 @@ interface LogoItem {
   height: number;
 }
 
-interface Project {
-  title: string;
-  description: string;
-  imgSrc: string;
-  link: string;
-}
-
 interface LogoCarouselItemProps {
   logos: LogoItem[];
   activeIndex: number;
   groupIndex: number;
 }
 
-const LogoCarouselItem = ({ logos, activeIndex, groupIndex }: LogoCarouselItemProps) => {
+const LogoCarouselItem = ({ logos, activeIndex }: LogoCarouselItemProps) => {
   return (
     <div className="logo-carousel-item h-[60px] relative">
       {logos.map((logo, idx) => {
@@ -220,50 +213,6 @@ const MobileLogoCarousel = ({ logos }: { logos: LogoItem[] }) => {
   );
 };
 
-// Mobile card for horizontal scroll
-const MobileProjectCard = ({ 
-  project, 
-  index, 
-  hoveredCardIdx, 
-  setHoveredCardIdx, 
-  ...props 
-}: { 
-  project: Project; 
-  index: number; 
-  hoveredCardIdx: number | null; 
-  setHoveredCardIdx: React.Dispatch<React.SetStateAction<number | null>>; 
-  [key: string]: any;
-}) => {
-  return (
-    <div 
-      className="snap-center min-w-[85vw] mx-2 first:ml-4 last:mr-4 bg-[#161819] border border-[#272727] rounded-lg overflow-hidden"
-      {...props}
-    >
-      <div className="relative">
-        <Image
-          src={project.imgSrc}
-          alt={`${project.title}-image`}
-          width={400}
-          height={220}
-          className="w-full h-[180px] object-cover"
-        />
-        {/* Corner pins */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#2962A5]"></div>
-        <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#2962A5]"></div>
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#2962A5]"></div>
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#2962A5]"></div>
-      </div>
-      <div className="p-4 text-left">
-        <h3 className="h5 font-bold mb-1">{project.title}</h3>
-        <p className="subtitle2 text-[#D4D4D4]">{project.description}</p>
-        <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-block mt-3 text-[#2962A5]">
-          Visit Project →
-        </a>
-      </div>
-    </div>
-  );
-};
-
 const PartnersAndProjects = () => {
   const [hoveredCardIdx, setHoveredCardIdx] = useState<number | null>(null);
   const [partnersStyles, partnersRef] = useAnimateIn(undefined, { delay: 0 });
@@ -273,8 +222,6 @@ const PartnersAndProjects = () => {
   const [activeIndex2, setActiveIndex2] = useState(0);
   const [activeIndex3, setActiveIndex3] = useState(0);
   const [activeIndex4, setActiveIndex4] = useState(0);
-  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-  const mobileProjectsRef = useRef<HTMLDivElement>(null);
   const activeIndices = [activeIndex0, activeIndex1, activeIndex2, activeIndex3, activeIndex4];
   const setActiveIndices = [setActiveIndex0, setActiveIndex1, setActiveIndex2, setActiveIndex3, setActiveIndex4];
   
@@ -346,28 +293,6 @@ const PartnersAndProjects = () => {
     };
   }, [visibleLogoGroups.length]);
 
-  // Handler for mobile project navigation
-  const handleProjectDotClick = (index: number) => {
-    if (mobileProjectsRef.current) {
-      setActiveProjectIndex(index);
-      const scrollAmount = index * (windowWidth * 0.85 + 16); // width of card + margin
-      mobileProjectsRef.current.scrollTo({
-        left: scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  // Handle scroll events to update active dot
-  const handleProjectScroll = () => {
-    if (mobileProjectsRef.current) {
-      const scrollPosition = mobileProjectsRef.current.scrollLeft;
-      const cardWidth = windowWidth * 0.85 + 16; // width of card + margin
-      const newActiveIndex = Math.round(scrollPosition / cardWidth);
-      setActiveProjectIndex(newActiveIndex);
-    }
-  };
-
   return (
     <section>
       {/* Partners section */}
@@ -411,7 +336,7 @@ const PartnersAndProjects = () => {
         <div className="project-cards-container">
           {PROJECTS.slice(0, 3).map((project, index) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
-            const [cardStyles, cardRef] = useAnimateIn(true, {
+            const [cardStyles] = useAnimateIn(true, {
               delay: 100 + index * 100,
             });
 
