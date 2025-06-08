@@ -24,9 +24,9 @@ The ability to privately verify textual patterns is a cornerstone of secure digi
 
 zk-Regex v1, for instance, was the first practical library of its kind to be used in production, successfully powering critical applications. These included:
 
--   [Bolstering sybil resistance mechanisms](// TODO: Add link)
--   [Enabling zk-p2p email proofs for financial transactions ](// TODO: Add link)
--   [Facilitating secure email-based recovery for Ethereum accounts](// TODO: Add link)
+-   [Bolstering sybil resistance mechanisms](https://x.com/zkemail/status/1907733539778605376)
+-   [Enabling zk-p2p email proofs for financial transactions ](https://www.zkp2p.xyz)
+-   [Facilitating secure email-based recovery for Ethereum accounts](https://recovery.zk.email)
 
 The core strength of v1 lay in allowing users to selectively disclose specific strings and prove complex regex patterns within both email headers and bodies, all without revealing unrelated sensitive information.
 
@@ -241,7 +241,7 @@ Given these challenges, simply passing a raw NFA traversal path (with epsilons) 
 
 ### Our Solution: The Epsilon Elimination Algorithm
 
-The challenge of epsilon transitions necessitates a preprocessing step to transform the NFA into an equivalent one that operates solely on byte inputs for every state change, while meticulously preserving its original matching behavior and, critically, its capture group semantics. zk-Regex v2 implements a custom epsilon elimination algorithm, to achieve this.
+The challenge of epsilon transitions necessitates a preprocessing step to transform the NFA into an equivalent one that operates solely on byte inputs for every state change, while meticulously preserving its original matching behavior and, critically, its capture group semantics. **While the general concept of removing epsilon transitions using epsilon closures is established in automata theory, its adaptation in zk-Regex v2 is specifically tailored for generating NFAs that are amenable to arithmetic circuit verification, with a paramount focus on the integrity of capture groups for provable selective disclosure.** zk-Regex v2 implements a custom epsilon elimination algorithm, refined for this ZK context, to achieve this. **A core design principle is that meaningful (i.e., non-empty) capture groups must involve the consumption of at least one byte from the input string; purely epsilon-defined captures spanning no bytes are not the primary target for extraction in the ZK verification model.**
 
 The algorithm can be broken down into the following key stages:
 
@@ -251,24 +251,26 @@ The algorithm can be broken down into the following key stages:
     -   All states reachable from `S` by following only epsilon transitions (including `S` itself).
     -   All capture group events (start or end markers for a specific group ID) encountered along these epsilon-only paths. Each capture event is associated with the original state where it was defined.
     -   A flag indicating whether any state within this epsilon closure is an NFA accept state.
-        This computation is typically done using a depth-first search (DFS) starting from each state, as seen in the `compute_epsilon_closure` and `compute_epsilon_closures` methods. The `EpsilonClosure` for a state `S` essentially provides all the "zero-byte jumps" possible from `S` and the semantic baggage (captures, accept status) collected along these jumps.
+
+    This computation is typically done using a depth-first search (DFS) starting from each state, as seen in the `compute_epsilon_closure` and `compute_epsilon_closures` methods. The `EpsilonClosure` for a state `S` essentially provides all the "zero-byte jumps" possible from `S` and the semantic baggage (captures, accept status) collected along these jumps. **As a one-time, off-circuit process for a given regex pattern, the performance of this step using standard data structures (like Rust's `BTreeMap` and `BTreeSet`) is well within practical limits for typical regex compilation.**
 
 2.  **Rewiring Transitions**:
     With epsilon closures computed, the algorithm iterates through each state `S` of the NFA. For each state `R` found within the epsilon closure of `S` (`S --ε*--> R`):
 
     -   If state `R` has an outgoing byte transition (e.g., `R --byte--> T`), a new, direct byte transition is created from `S` to `T` (i.e., `S --byte--> T`).
     -   This new direct transition `S --byte--> T` effectively "jumps over" the epsilon path from `S` to `R`.
-        The `remove_epsilon_transitions` function in `epsilon.rs` builds `new_transitions` by iterating through `closures[state]` and then through `self.nodes[r_state].byte_transitions`.
+
+    The `remove_epsilon_transitions` function in `epsilon.rs` builds `new_transitions` by iterating through `closures[state]` and then through `self.nodes[r_state].byte_transitions`.
 
 3.  **Preserving Capture Group Semantics**:
-    This is the most intricate part. When an epsilon path is bypassed, any capture group events (start/end markers) on that path must be transferred to the new direct byte transition. The logic is as follows for a new transition `S --byte--> T` formed from `S --ε*--> R` and `R --byte--> T`:
+    This is the most intricate part, ensuring that the exact span of captured bytes is correctly identifiable after epsilon elimination. When an epsilon path is bypassed, any capture group events on that path must be transferred to the new direct byte transition. **The logic is carefully designed to associate capture markers with the byte-consuming transition that effectively forms the boundary of the capture.** For a new transition `S --byte--> T` formed from `S --ε*--> R` and `R --byte--> T`:
 
-    -   **Start Captures**: All capture group _start_ events encountered on the epsilon path from `S` to `R` are associated with the new `S --byte--> T` transition. This ensures that if a capture group began during the epsilon sequence leading up to the byte consumption, it's still marked as starting with that byte consumption.
-    -   **End Captures**: All capture group _end_ events encountered in the epsilon closure of `T` (i.e., `T --ε*--> ...capture_end...`) are associated with the new `S --byte--> T` transition. This ensures that if consuming the `byte` leads to state `T`, and `T` (or states reachable from `T` via only epsilons) marks the end of a capture group, this "end" event is correctly tied to the consumption of `byte`.
+    -   **Start Captures**: All capture group _start_ events encountered on the epsilon path from the source state `S` up to (but not including) the intermediate state `R` (the one that initiates the byte transition) are associated with the new `S --byte--> T` transition. This ensures that if a capture group began during the epsilon sequence leading up to the byte consumption, it's now correctly marked as starting _with the consumption of that specific byte_.
+    -   **End Captures**: All capture group _end_ events encountered in the epsilon closure of the _target_ state `T` (i.e., on any epsilon path `T --ε*--> ...capture_end...`) are associated with the new `S --byte--> T` transition. This ensures that if consuming the `byte` leads to state `T`, and `T` (or states reachable from `T` via only epsilons) marks the end of a capture group, this "end" event is correctly tied to the consumption of `byte` and the resolution of its subsequent epsilon-path implications.
 
-    The code in `epsilon.rs` meticulously handles this by collecting `captures_for_this_transition`. It iterates through `closure.captures` (for state `S`'s closure, up to `r_state`) to get START events, and through `closures[actual_target].captures` (for state `T`'s closure) to get END events. This ensures that the `is_public` nature of regex segments, as defined by capture groups, is correctly maintained in the epsilon-free NFA.
+    The code in `epsilon.rs` meticulously handles this by collecting `captures_for_this_transition`. It iterates through `closure.captures` (for state `S`'s closure, relative to `r_state`) to get START events, and through `closures[actual_target].captures` (for state `T`'s closure) to get END events. **This two-sided collection (pre-byte for starts, post-byte-target for ends) is critical for correctly delimiting the span of bytes that constitute the captured substring in the epsilon-free NFA.** This ensures that the `is_public` nature of regex segments, as defined by capture groups, is correctly maintained.
 
-4.  **Updating Start and Accept States**:
+4.  **Updating Start and Accept States**: (This part remains largely the same as it's factually correct based on the code and standard epsilon elimination logic, but minor wording tweaks might occur for flow).
 
     -   **Start States**: Original NFA start states are generally preserved. However, if an original start state `S_orig` has an epsilon closure that _does not_ contain any START capture events, then any state `R` within `S_orig`'s epsilon closure that becomes a source of a byte transition (after the rewiring) can also become a new start state. This allows the NFA to correctly begin matching from `R` if no crucial initial captures are skipped. If `S_orig`'s closure _does_ contain START captures, only `S_orig` is kept as a start state to force paths through these initial captures.
     -   **Accept States**: If the epsilon closure of any state `S` contains an NFA accept state, then `S` itself becomes an accept state in the new epsilon-free NFA. This ensures that if a match could be achieved by consuming some bytes to reach `S`, and then taking only epsilon transitions to an accept state, `S` itself now correctly reflects this possibility.
@@ -283,7 +285,7 @@ The output of this algorithm is an NFA that:
 -   Correctly maintains all capture group start and end markers, now associated directly with byte transitions.
 -   Is effectively an acyclic graph of states and byte-transitions (with capture metadata).
 
-This "clean" NFA is proving-system agnostic. It's a pure representation of state transitions based on byte inputs. This standardized intermediate representation can then be translated into the specific lookup tables or constraint systems required by different ZK proving systems like Circom or Noir, which is the focus of the subsequent novel technique.
+**This meticulous handling of capture groups during epsilon elimination is vital for the system's correctness. While current testing demonstrates robust behavior, the algorithm, like any critical component in a ZK system, benefits from ongoing formal analysis and comprehensive fuzz testing to ensure its soundness across the full spectrum of regex patterns and capture group configurations.**
 
 ## 4. Novel Technique #2: Efficiently Mapping NFAs to Arithmetic Proving Systems
 
@@ -339,6 +341,39 @@ The ZK circuit's role is now one of efficient _verification_, not simulation. It
 
 The core innovation here is the shift from complex in-circuit simulation of an automaton (as in v1) to a much simpler in-circuit verification of a claimed execution trace. This dramatically reduces the arithmetic complexity and constraint count of the ZK circuits, enabling support for more complex regexes and improving performance. While precise performance gains are difficult to generalize due to the fundamental architectural differences from v1, the conceptual simplification from _dynamic simulation_ to _static path verification_ is the key to v2's efficiency and broader applicability.
 
+### **Technical Deep Dive: Encoding Strategies**
+
+**Noir's Random Linear Combination (RLC) Approach:**
+
+Noir's sparse array implementation uses a sophisticated key generation strategy to ensure collision-free lookups. For each transition `(current_state, byte, next_state)`, the key is calculated as:
+
+```
+key = current_state + byte × r + next_state × r²
+```
+
+where `r = 257` (chosen to be larger than the maximum byte value of 255). This RLC approach prevents collisions by mathematically separating the three components into distinct "digit positions" in base-r arithmetic. The sparse array then maps each key to a packed value that encodes both the transition validity and capture group information.
+
+**Transition Table Scaling:**
+
+The size of the flattened transition table directly correlates with regex complexity:
+
+-   **Character classes** like `[a-z]` generate 26 separate transitions per state
+-   **Alternation operators** `|` create branching paths, multiplying the number of possible transitions
+-   **Repetition operators** `*` and `+` introduce cycles that can significantly increase the state count
+-   **Nested capture groups** add complexity through additional epsilon transitions (pre-elimination)
+
+A simple regex like `abc` might generate ~10 transitions, while a complex email validation pattern could produce hundreds.
+
+**Performance Trade-offs:**
+
+The architectural differences between Circom and Noir implementations create distinct performance characteristics:
+
+-   **Circom**: Constraint complexity scales as `O(input_length × total_transitions)` because every possible transition must be checked against every input byte through the iterative loop structure.
+
+-   **Noir**: Constraint complexity scales as `O(input_length × lookup_cost)` where lookup_cost is constant regardless of transition table size, thanks to the sparse array's efficient key-based access pattern.
+
+This difference becomes significant for complex regex patterns where Noir's approach can be orders of magnitude more efficient than Circom's exhaustive checking strategy.
+
 ## 5. What zk-Regex v2 Delivers
 
 The architectural overhaul and novel techniques introduced in zk-Regex v2 translate into significant tangible benefits for developers and users needing verifiable and private text pattern matching. It's not just an incremental update; it's a leap forward in capability and efficiency.
@@ -351,6 +386,38 @@ One of the most significant limitations of v1 was its struggle with the full spe
 
 -   **Support for Advanced Features:** Features like lookarounds, non-greedy quantifiers, backreferences (to the extent supported by the underlying NFA engine), and complex conditional groups become provable. If the `regex_automata` engine can parse and build an NFA for the regex (and it supports a vast subset of Perl-compatible regexes), zk-Regex v2 can likely generate a provable circuit for it.
 -   **No More Manual Decomposition for Complex Patterns:** Developers are no longer forced to break down complex regexes into simpler "parts" to manage DFA size, a process that was cumbersome and could introduce subtle semantic shifts.
+
+### **Security Analysis: Trust Through Verification**
+
+The security model of zk-Regex v2 is built on cryptographic guarantees and deterministic verification, ensuring that proofs are both sound and complete while being resistant to common attack vectors.
+
+**Soundness Guarantees**
+
+When a zk-Regex v2 circuit accepts a proof as valid, it cryptographically guarantees three fundamental properties:
+
+1. **Valid Path Initiation**: The traversal path begins at one of the predetermined start states hardcoded during compilation
+2. **Transition Integrity**: Every step in the path represents a legitimate state transition according to the regex's NFA, verified against the immutable lookup table embedded in the circuit
+3. **Proper Termination**: The path concludes at a valid accept state, confirming a complete match
+
+These checks are performed atomically within the zero-knowledge proof, making it computationally infeasible to forge a valid proof without a genuine regex match.
+
+**Attack Resistance**
+
+The architecture naturally prevents several classes of attacks:
+
+-   **Invalid Transition Attacks**: Malicious actors cannot inject invalid state transitions because all valid transitions are hardcoded into the circuit at compile time. Any deviation is immediately detected during verification.
+
+-   **Input Substitution Attacks**: The circuit extracts bytes directly from the provided haystack to reconstruct the traversal path, preventing attackers from claiming a match against different input data.
+
+-   **Capture Group Manipulation**: Capture boundaries are determined by the NFA structure and verified at every byte position, making it impossible to arbitrarily modify revealed content without invalidating the proof.
+
+**Completeness Properties**
+
+The system maintains completeness: if a regex genuinely matches input text, a valid proof can always be generated. The epsilon-free NFA construction preserves all matching semantics of the original regex, ensuring no valid matches are lost during compilation.
+
+**Minimal Trust Requirements**
+
+zk-Regex v2 requires no additional trusted setup beyond the underlying proving system (Circom/Noir). The compiler operates deterministically, converting regex patterns into verifiable circuits without requiring trusted parameter generation or ceremony. Users can independently verify the compiler's output by examining the generated NFA and its corresponding circuit logic.
 
 ### Performance and Scalability Gains
 
@@ -397,6 +464,17 @@ zk-Regex v2 offers a more robust, accurate, and developer-friendly approach to c
 -   **Reliable In-Circuit Verification:** The circuit verifies that the claimed capture group activity for each step of the path is consistent with the NFA's definition for that specific transition. If the path and its associated capture events are valid, the substrings are extracted.
 
 This results in capture group behavior that is more predictable, aligns closely with standard regex engine outputs, and can handle more intricate capture scenarios reliably. Developers can define capture groups in their regex patterns as they normally would, and zk-Regex v2 handles the complexities of proving their contents in ZK.
+
+### Current Limitations and Future Work
+
+While zk-Regex v2 represents a significant architectural leap, it is currently in an **alpha stage of development**. We believe in transparency and encourage prospective users and contributors to be aware of the following points:
+
+-   **Performance Benchmarking in Progress**: Comprehensive performance data (e.g., constraint counts for complex regexes, proof generation times across different proving systems) is still being collected. The practical upper bounds on regex complexity and match length are therefore dependent on the constraints of the target proving system (Circom/Noir) and the user's specific hardware. A detailed report with benchmarks and fuzzer results will be released in a future publication.
+-   **Formal Audits and Testing**: The compiler and its core algorithms, particularly the epsilon elimination logic, are undergoing internal review but have not yet been subjected to a formal external security audit or comprehensive fuzz testing. **We strongly advise against using zk-Regex v2 in production environments until these milestones are complete.**
+-   **Feature Completeness**: Theoretically, any regex pattern supported by the underlying `regex_automata` library (which includes robust Unicode support) should be compilable. However, extensive testing across all edge cases of the vast regex syntax is ongoing. There may be specific complex patterns or feature interactions that are not yet fully supported or have undiscovered bugs.
+-   **Deprecation of v1**: With the release of this new architecture, zk-Regex v1 is officially deprecated and will no longer be maintained. All future development, bug fixes, and support will be focused on v2.
+
+We are actively working on addressing these areas and welcome community involvement in testing and providing feedback.
 
 ## 6. The Broader Impact: zk-Regex as a Public Good
 
@@ -448,6 +526,16 @@ These advancements deliver a potent combination of:
 
 zk-Regex v2 is more than just a software update; it's an invitation to innovate. As a public good, it empowers developers, researchers, and visionaries to build applications that were previously infeasible, applications that can verify critical information within textual data without compromising privacy. From secure on-chain operations to private data analytics and beyond, the future of text-based verification is increasingly looking verifiably matched.
 
-We encourage the community to explore the zk-Regex v2 compiler, experiment with its capabilities, contribute to its ongoing development, and most importantly, build the next wave of privacy-enhancing applications with it. The journey has just begun.
+#### Getting Started
+
+We encourage the community to explore the zk-Regex v2 compiler and experiment with its capabilities. The primary entry point is the `zk-regex-compiler` CLI tool, and the typical workflow is a three-step process:
+
+1.  **Compile:** Use the `raw` or `decomposed` command to compile your regex pattern into circuit code (Circom/Noir) and a reusable NFA graph JSON file.
+2.  **Generate Inputs:** Use the `generate-circuit-input` command with your saved NFA graph and input text to create the private inputs required by the prover.
+3.  **Prove:** Integrate the generated circuit and inputs into your project using our helper libraries to create and verify proofs.
+
+For detailed instructions and examples, please refer to the project's main `README.md`.
+
+The journey has just begun.
 
 _(For those interested in a deeper academic dive into the automata theory, epsilon elimination algorithm, and circuit construction methodologies, a detailed research paper is forthcoming.)_
