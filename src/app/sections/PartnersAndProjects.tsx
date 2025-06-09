@@ -19,279 +19,27 @@ import Image from "next/image";
 import { PROJECTS } from "../contants";
 import { useAnimateIn } from "../hooks/useAnimateIn";
 
-// Define logo groups for carousel
-const logoGroups = [
-  [
-    { src: EthereumFoundationLogo, alt: "Ethereum Foundation Logo", width: 150, height: 36 },
-    { src: GitcoinPassportLogo, alt: "Gitcoin Passport Logo", width: 150, height: 36 },
-    { src: RhinestoneLogo, alt: "Rhinestone Logo", width: 150, height: 36 }
-  ],
-  [
-    { src: IYKLogo, alt: "IYK Logo", width: 100, height: 36 },
-    { src: OKXLogo, alt: "OKX Logo", width: 150, height: 36 },
-    { src: JupiterLogo, alt: "Jupiter Logo", width: 150, height: 36 }
-  ],
-  [
-    { src: GitcoinPassportLogo, alt: "Gitcoin Passport Logo", width: 150, height: 36 },
-    { src: OpenZeppelinLogo, alt: "OpenZeppelin Logo", width: 150, height: 36 },
-    { src: EdgeCityLogo, alt: "EdgeCity Logo", width: 150, height: 36 }
-  ],
-  [
-    { src: RhinestoneLogo, alt: "Rhinestone Logo", width: 150, height: 36 },
-    { src: ENSLogo, alt: "ENS Logo", width: 150, height: 36 },
-    { src: OpenPassportLogo, alt: "Open Passport Logo", width: 150, height: 36 }
-  ],
-  [
-    { src: ClaveLogo, alt: "Clave Logo", width: 150, height: 36 },
-    { src: EthereumFoundationLogo, alt: "Ethereum Foundation Logo", width: 150, height: 36 },
-    { src: ZKP2PLogo, alt: "ZKP2P Logo", width: 150, height: 36 }
-  ]
+const partnersLogos = [
+  { src: EthereumFoundationLogo, alt: "Ethereum Foundation Logo", width: 150, height: 36, href: "https://ethereum.org/" },
+  { src: GitcoinPassportLogo, alt: "Gitcoin Passport Logo", width: 150, height: 36, href: "https://passport.gitcoin.co/" },
+  { src: RhinestoneLogo, alt: "Rhinestone Logo", width: 150, height: 36, href: "https://www.rhinestone.wtf/" },
+  { src: IYKLogo, alt: "IYK Logo", width: 100, height: 36, href: "https://iyk.app/" },
+  { src: OKXLogo, alt: "OKX Logo", width: 150, height: 36, href: "https://okx.com/" },
+  { src: JupiterLogo, alt: "Jupiter Logo", width: 150, height: 36, href: "https://jup.ag/" },
+  { src: OpenZeppelinLogo, alt: "OpenZeppelin Logo", width: 150, height: 36, href: "https://www.openzeppelin.com/" },
+  { src: EdgeCityLogo, alt: "EdgeCity Logo", width: 150, height: 36, href: "https://www.edgecity.live/" },
+  { src: ENSLogo, alt: "ENS Logo", width: 150, height: 36, href: "https://ens.domains/" },
+  { src: OpenPassportLogo, alt: "Open Passport Logo", width: 150, height: 36, href: "https://self.xyz/" },
+  { src: ClaveLogo, alt: "Clave Logo", width: 150, height: 36, href: "https://www.getclave.io/" },
+  { src: ZKP2PLogo, alt: "ZKP2P Logo", width: 150, height: 36, href: "https://zkp2p.xyz/" }
 ];
-
-// Flatten all logos for mobile grid view
-const allLogos = logoGroups.flat();
-
-interface LogoItem {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-}
-
-interface LogoCarouselItemProps {
-  logos: LogoItem[];
-  activeIndex: number;
-  groupIndex: number;
-}
-
-const LogoCarouselItem = ({ logos, activeIndex }: LogoCarouselItemProps) => {
-  return (
-    <div className="logo-carousel-item h-[60px] relative">
-      {logos.map((logo, idx) => {
-        const isActive = idx === activeIndex;
-        const isNext = (idx === (activeIndex + 1) % logos.length);
-        const isPrev = (idx === (activeIndex - 1 + logos.length) % logos.length);
-        
-        return (
-          <div 
-            key={idx} 
-            className="logo-carousel-slide flex items-center justify-center h-[60px] absolute top-0 left-0 w-full"
-            style={{
-              opacity: isActive ? 1 : 0,
-              transform: `translateY(${
-                isActive ? '0' : 
-                isNext ? '100%' : 
-                isPrev ? '-120%' : 
-                idx < activeIndex ? '-100%' : '100%'
-              })`,
-              transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-              zIndex: isActive ? 2 : 1,
-              willChange: 'transform, opacity'
-            }}
-          >
-            <Image 
-              src={logo.src} 
-              alt={logo.alt} 
-              width={logo.width} 
-              height={logo.height}
-              style={{ 
-                objectFit: 'contain',
-                transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                transform: isActive ? 'scale(1)' : 'scale(0.5)',
-                opacity: isActive ? 1 : 0,
-                filter: isActive ? 'blur(0px)' : 'blur(26px)'
-              }}
-            />
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-// Mobile Logo Carousel component
-const MobileLogoCarousel = ({ logos }: { logos: LogoItem[] }) => {
-  // Create groups of 6 logos (2 rows of 3)
-  const logoGroups = Array.from({ length: Math.ceil(logos.length / 6) }, (_, i) =>
-    logos.slice(i * 6, (i + 1) * 6)
-  );
-  
-  // Track active indices for each column of logos
-  const [activeIndices, setActiveIndices] = useState(Array(3).fill(0));
-  const intervalRef = useRef<number | null>(null);
-  const timeoutRefs = useRef<number[]>([]);
-  
-  // Set up animation intervals with staggered timing
-  useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    timeoutRefs.current.forEach(timeout => {
-      if (timeout) clearTimeout(timeout);
-    });
-    
-    timeoutRefs.current = [];
-    
-    intervalRef.current = window.setInterval(() => {
-      timeoutRefs.current.forEach(timeout => {
-        if (timeout) clearTimeout(timeout);
-      });
-      timeoutRefs.current = [];
-      
-      // Stagger the animation for each column
-      for (let i = 0; i < 3; i++) {
-        const timeoutId = window.setTimeout(() => {
-          setActiveIndices(prev => {
-            const newIndices = [...prev];
-            newIndices[i] = (newIndices[i] + 1) % logoGroups.length;
-            return newIndices;
-          });
-        }, i * 200);
-        
-        timeoutRefs.current.push(timeoutId);
-      }
-    }, 2500);
-    
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      timeoutRefs.current.forEach(timeout => {
-        if (timeout) clearTimeout(timeout);
-      });
-    };
-  }, [logoGroups.length]);
-  
-  return (
-    <div className="grid grid-cols-3 gap-3">
-      {/* Create three columns */}
-      {[0, 1, 2].map(colIndex => (
-        <div key={colIndex} className="relative h-[140px]">
-          {logoGroups.map((group, groupIndex) => {
-            // Get the logo for this position if it exists
-            const logoIndex = colIndex + groupIndex * 3;
-            const logo = logoIndex < logos.length ? logos[logoIndex] : null;
-            
-            if (!logo) return null;
-            
-            const isActive = activeIndices[colIndex] === groupIndex;
-            const isNext = (activeIndices[colIndex] + 1) % logoGroups.length === groupIndex;
-            const isPrev = (activeIndices[colIndex] - 1 + logoGroups.length) % logoGroups.length === groupIndex;
-            
-            return (
-              <div 
-                key={`${colIndex}-${groupIndex}`}
-                className="absolute top-0 left-0 w-full border border-[#272727] rounded-md flex items-center justify-center p-2 h-[64px]"
-                style={{
-                  opacity: isActive ? 1 : 0,
-                  transform: `translateY(${
-                    isActive ? '0' : 
-                    isNext ? '100%' : 
-                    isPrev ? '-100%' : 
-                    groupIndex < activeIndices[colIndex] ? '-100%' : '100%'
-                  })`,
-                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                  zIndex: isActive ? 2 : 1,
-                  willChange: 'transform, opacity'
-                }}
-              >
-                <Image 
-                  src={logo.src} 
-                  alt={logo.alt} 
-                  width={logo.width * 0.7} 
-                  height={logo.height * 0.7}
-                  style={{ 
-                    objectFit: 'contain',
-                    transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: isActive ? 'scale(1)' : 'scale(0.5)',
-                    opacity: isActive ? 1 : 0,
-                    filter: isActive ? 'blur(0px)' : 'blur(10px)'
-                  }}
-                />
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </div>
-  );
-};
 
 const PartnersAndProjects = () => {
   const [hoveredCardIdx, setHoveredCardIdx] = useState<number | null>(null);
+  const [hoveredPartner, setHoveredPartner] = useState<string | null>(null);
+  const [showAllPartners, setShowAllPartners] = useState(false);
   const [partnersStyles, partnersRef] = useAnimateIn(undefined, { delay: 0 });
   const [projectStyles, projectRef] = useAnimateIn(undefined, { delay: 100 });
-  const [activeIndex0, setActiveIndex0] = useState(0);
-  const [activeIndex1, setActiveIndex1] = useState(0);
-  const [activeIndex2, setActiveIndex2] = useState(0);
-  const [activeIndex3, setActiveIndex3] = useState(0);
-  const [activeIndex4, setActiveIndex4] = useState(0);
-  const activeIndices = [activeIndex0, activeIndex1, activeIndex2, activeIndex3, activeIndex4];
-  const setActiveIndices = [setActiveIndex0, setActiveIndex1, setActiveIndex2, setActiveIndex3, setActiveIndex4];
-  
-  const [windowWidth, setWindowWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 1024);
-  const intervalRef = useRef<number | null>(null);
-  const timeoutRefs = useRef<number[]>([]);
-  const isMobile = windowWidth <= 768;
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Determine how many logo groups to show based on window width
-  const getVisibleLogoGroups = () => {
-    if (windowWidth <= 480) return 2;
-    if (windowWidth <= 768) return 3;
-    return 5;
-  };
-
-  const visibleLogoGroups = logoGroups.slice(0, getVisibleLogoGroups());
-
-  // Clean up existing timeouts and intervals
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      timeoutRefs.current.forEach(timeout => {
-        if (timeout) clearTimeout(timeout);
-      });
-    };
-  }, []);
-
-  // Set up a single interval to trigger all logo changes with staggered timeouts
-  useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    timeoutRefs.current.forEach(timeout => {
-      if (timeout) clearTimeout(timeout);
-    });
-    
-    timeoutRefs.current = [];
-    
-    intervalRef.current = window.setInterval(() => {
-      timeoutRefs.current.forEach(timeout => {
-        if (timeout) clearTimeout(timeout);
-      });
-      timeoutRefs.current = [];
-      
-      for (let i = 0; i < visibleLogoGroups.length; i++) {
-        const timeoutId = window.setTimeout(() => {
-          const setActiveIndex = setActiveIndices[i];
-          const currentLogos = logoGroups[i];
-          
-          setActiveIndex(prevIndex => (prevIndex + 1) % currentLogos.length);
-        }, i * 200); // Increased stagger timing for smoother effect
-        
-        timeoutRefs.current.push(timeoutId);
-      }
-    }, 2000); // Increased main interval
-    
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      timeoutRefs.current.forEach(timeout => {
-        if (timeout) clearTimeout(timeout);
-      });
-    };
-  }, [visibleLogoGroups.length]);
 
   return (
     <section>
@@ -306,24 +54,47 @@ const PartnersAndProjects = () => {
           From next-gen enterprises to established organizations
         </p>
         
-        {/* Desktop view for partners */}
-        <div className={`${isMobile ? 'hidden' : 'block'}`}>
-          <div className="partner-logos mt-8">
-            {visibleLogoGroups.map((logos, groupIndex) => (
-              <LogoCarouselItem 
-                key={groupIndex} 
-                logos={logos} 
-                activeIndex={activeIndices[groupIndex]}
-                groupIndex={groupIndex}
+        {/* Logos */}
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-12 gap-y-16 items-center justify-items-center mt-12 mb-24">
+          {partnersLogos.map((logo, index) => (
+            <Link
+              key={logo.alt}
+              href={logo.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={index >= 6 && !showAllPartners ? "hidden md:block" : "block"}
+            >
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={logo.width}
+                height={logo.height}
+                className={`object-contain cursor-pointer transition-all duration-300 ease-in-out ${
+                  hoveredPartner
+                    ? hoveredPartner === logo.alt
+                      ? "scale-110"
+                      : "blur-sm opacity-50"
+                    : ""
+                }`}
+                onMouseEnter={() => setHoveredPartner(logo.alt)}
+                onMouseLeave={() => setHoveredPartner(null)}
               />
-            ))}
+            </Link>
+          ))}
+        </div>
+        {partnersLogos.length > 6 && (
+          <div className={`text-center md:hidden -mt-12 mb-16`}>
+            <button
+              onClick={() => setShowAllPartners(!showAllPartners)}
+              className="subtitle1 text-[#A8A8A8] hover:text-white transition-colors"
+            >
+              {showAllPartners ? "Show less" : "Show more"}
+              <span style={{ marginLeft: 8 }}>
+                {showAllPartners ? "↑" : "↓"}
+              </span>
+            </button>
           </div>
-        </div>
-        
-        {/* Mobile view for partners - new animated carousel */}
-        <div className={`${isMobile ? 'block' : 'hidden'} mt-8`}>
-          <MobileLogoCarousel logos={allLogos} />
-        </div>
+        )}
       </div>
       
       {/* Projects section */}
