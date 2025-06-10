@@ -12,7 +12,7 @@ const OpenZeppelinLogo = "/assets/OpenZeppelin.svg";
 const RhinestoneLogo = "/assets/Rhinestone.svg";
 const OKXLogo = "/assets/OKX.svg";
 const EdgeCityLogo = "/assets/Edgecity.svg";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import ProjectCard from "../components/ProjectCard";
 import Link from "next/link";
 import Image from "next/image";
@@ -20,18 +20,90 @@ import { PROJECTS } from "../contants";
 import { useAnimateIn } from "../hooks/useAnimateIn";
 
 const partnersLogos = [
-  { src: EthereumFoundationLogo, alt: "Ethereum Foundation Logo", width: 150, height: 36, href: "https://ethereum.org/" },
-  { src: GitcoinPassportLogo, alt: "Gitcoin Passport Logo", width: 150, height: 36, href: "https://passport.gitcoin.co/" },
-  { src: RhinestoneLogo, alt: "Rhinestone Logo", width: 150, height: 36, href: "https://www.rhinestone.wtf/" },
-  { src: IYKLogo, alt: "IYK Logo", width: 100, height: 36, href: "https://iyk.app/" },
-  { src: OKXLogo, alt: "OKX Logo", width: 150, height: 36, href: "https://okx.com/" },
-  { src: JupiterLogo, alt: "Jupiter Logo", width: 150, height: 36, href: "https://jup.ag/" },
-  { src: OpenZeppelinLogo, alt: "OpenZeppelin Logo", width: 150, height: 36, href: "https://www.openzeppelin.com/" },
-  { src: EdgeCityLogo, alt: "EdgeCity Logo", width: 150, height: 36, href: "https://www.edgecity.live/" },
-  { src: ENSLogo, alt: "ENS Logo", width: 150, height: 36, href: "https://ens.domains/" },
-  { src: OpenPassportLogo, alt: "Open Passport Logo", width: 150, height: 36, href: "https://self.xyz/" },
-  { src: ClaveLogo, alt: "Clave Logo", width: 150, height: 36, href: "https://www.getclave.io/" },
-  { src: ZKP2PLogo, alt: "ZKP2P Logo", width: 150, height: 36, href: "https://zkp2p.xyz/" }
+  {
+    src: EthereumFoundationLogo,
+    alt: "Ethereum Foundation Logo",
+    width: 150,
+    height: 36,
+    href: "https://ethereum.org/",
+  },
+  {
+    src: GitcoinPassportLogo,
+    alt: "Gitcoin Passport Logo",
+    width: 150,
+    height: 36,
+    href: "https://passport.gitcoin.co/",
+  },
+  {
+    src: RhinestoneLogo,
+    alt: "Rhinestone Logo",
+    width: 150,
+    height: 36,
+    href: "https://www.rhinestone.wtf/",
+  },
+  {
+    src: IYKLogo,
+    alt: "IYK Logo",
+    width: 100,
+    height: 36,
+    href: "https://iyk.app/",
+  },
+  {
+    src: OKXLogo,
+    alt: "OKX Logo",
+    width: 150,
+    height: 36,
+    href: "https://okx.com/",
+  },
+  {
+    src: JupiterLogo,
+    alt: "Jupiter Logo",
+    width: 150,
+    height: 36,
+    href: "https://jup.ag/",
+  },
+  {
+    src: OpenZeppelinLogo,
+    alt: "OpenZeppelin Logo",
+    width: 150,
+    height: 36,
+    href: "https://www.openzeppelin.com/",
+  },
+  {
+    src: EdgeCityLogo,
+    alt: "EdgeCity Logo",
+    width: 150,
+    height: 36,
+    href: "https://www.edgecity.live/",
+  },
+  {
+    src: ENSLogo,
+    alt: "ENS Logo",
+    width: 150,
+    height: 36,
+    href: "https://ens.domains/",
+  },
+  {
+    src: OpenPassportLogo,
+    alt: "Open Passport Logo",
+    width: 150,
+    height: 36,
+    href: "https://self.xyz/",
+  },
+  {
+    src: ClaveLogo,
+    alt: "Clave Logo",
+    width: 150,
+    height: 36,
+    href: "https://www.getclave.io/",
+  },
+  {
+    src: ZKP2PLogo,
+    alt: "ZKP2P Logo",
+    width: 150,
+    height: 36,
+    href: "https://zkp2p.xyz/",
+  },
 ];
 
 const PartnersAndProjects = () => {
@@ -53,7 +125,7 @@ const PartnersAndProjects = () => {
         <p className="subtitle1 mb-8">
           From next-gen enterprises to established organizations
         </p>
-        
+
         {/* Logos */}
         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-12 gap-y-16 items-center justify-items-center mt-12 mb-24">
           {partnersLogos.map((logo, index) => (
@@ -62,7 +134,9 @@ const PartnersAndProjects = () => {
               href={logo.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={index >= 6 && !showAllPartners ? "hidden md:block" : "block"}
+              className={
+                index >= 6 && !showAllPartners ? "hidden md:block" : "block"
+              }
             >
               <Image
                 src={logo.src}
@@ -96,7 +170,7 @@ const PartnersAndProjects = () => {
           </div>
         )}
       </div>
-      
+
       {/* Projects section */}
       <div
         className="container-width container-padding"
@@ -136,12 +210,18 @@ const PartnersAndProjects = () => {
           </p>
         </Link>
       </div>
-      
+
       {/* Add keyframes for fadeIn animation */}
       <style jsx global>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </section>
