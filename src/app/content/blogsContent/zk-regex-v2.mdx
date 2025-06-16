@@ -1,13 +1,13 @@
 ---
-title: "zk-Regex v2: Revolutionizing Verifiable and Private Regex Proofs"
+title: "zk-Regex v2: A New Architecture for Verifiable Regex Proofs"
 date: 2025-06-12T12:00:00.000Z
 type: Post
 draft: false
 slug: "zk-regex-v2"
 category: "15 min read"
-tags: ["crypto", "zk", "regex"]
+tags: ["crypto", "zk", "regex", "compiler"]
 image: /blogsImages/testImg.png
-description: "zk-Regex v2 introduces a complete redesign with unprecedented flexibility, broader regex feature support, and substantial efficiency gains through NFAs with pre-computation and epsilon elimination algorithms."
+description: "An overview of the zk-Regex v2 architecture, which uses off-circuit NFA matching and an epsilon elimination algorithm to generate efficient ZK proofs for a wide range of regex patterns."
 aliases:
     - /posts/zk-regex-v2
     - /zk-regex-v2
@@ -38,16 +38,11 @@ authors: ["Shreyas Londhe"]
     -   [Expanded Regex Support](#expanded-regex-support)
     -   [Unsupported Features](#unsupported-features)
     -   [Security Analysis: Trust Through Verification](#security-analysis-trust-through-verification)
-    -   [Performance and Scalability](#performance-and-scalability)
+    -   [Performance and Scalability](#performance-and-scalability-characteristics)
     -   [Proving System Agnostic Core](#proving-system-agnostic-core)
     -   [Simplified and Accurate Capture Groups](#simplified-and-accurate-capture-groups)
     -   [Current Limitations and Future Work](#current-limitations-and-future-work)
 6.  [Applications and Broader Impact](#6-applications-and-broader-impact)
-    -   [On-Chain Data Validation](#on-chain-data-validation)
-    -   [Private Information Extraction](#private-information-extraction)
-    -   [Privacy-Preserving Content Moderation](#privacy-preserving-content-moderation)
-    -   [Verifiable Credentials and Attestations](#verifiable-credentials-and-attestations)
-    -   [Decentralized Information Markets](#decentralized-information-markets)
 7.  [Conclusion](#7-conclusion)
     -   [Getting Started](#getting-started)
 
@@ -63,9 +58,9 @@ zk-Regex v1 was the first practical library of its kind to be used in production
 
 The core strength of v1 lay in allowing users to selectively disclose specific strings and prove regex patterns within both email headers and bodies.
 
-However, the v1 architecture, which directly translated Deterministic Finite Automata (DFAs) into circuits, had fundamental limitations. Its design made it difficult or impossible to support a significant portion of the standard regex syntax, particularly features involving non-determinism or dynamic evaluation. For the patterns it did support, the direct-to-circuit translation often resulted in large and inefficient circuits.
+The v1 architecture, while powerful for its intended applications, was based on an approach—directly translating Deterministic Finite Automata (DFAs) into circuits—that involved inherent architectural trade-offs. This design choice was effective for its specific use cases, but presented challenges for supporting a broader set of standard regex syntax, and for the patterns it did support, resulted in circuits whose size and cost scaled with DFA complexity.
 
-This article introduces zk-Regex v2, which uses a new architecture to address these limitations. The v2 model separates the complex task of regex matching from the in-circuit verification, enabling support for a much broader set of regex features with more efficient circuit construction. We will detail the technical innovations in v2, which enable more powerful and flexible ZK-based text processing, setting the stage for applications beyond regex, such as verifiable JSON parsing.
+This article introduces zk-Regex v2, which builds upon the lessons from v1 to introduce a new architecture. The v2 model separates the complex task of regex matching from the in-circuit verification, enabling support for a much broader set of regex features with more efficient circuit construction. We will detail the architectural updates in v2, which enable more powerful and flexible ZK-based text processing, setting the stage for applications beyond regex, such as verifiable JSON parsing.
 
 ## 2. From DFAs in Circuits to NFAs with Pre-computation
 
@@ -144,23 +139,21 @@ The number of pre-instantiated components in a full circuit demonstrated the res
 
 Capture groups were handled by tracking when the DFA traversal entered and exited the states corresponding to a part-DFA marked `is_public: true`. Input bytes processed within these state segments were conditionally outputted.
 
-#### 4. Core Challenges Faced by v1:
+#### 4. Architectural Considerations in v1:
 
-This direct DFA-in-circuit approach had several fundamental problems:
+The direct DFA-in-circuit approach was a successful design with several key characteristics:
 
--   **Circuit Complexity and Size**: Directly encoding a DFA's transition table into arithmetic constraints resulted in large circuits with high proving costs, especially for regexes that produce large DFAs.
+-   **Circuit Complexity and Size**: Directly encoding a DFA's transition table into arithmetic constraints meant that circuit size and proving cost scaled with the number of states in the DFA.
 
--   **Limited Regex Feature Support**: The architecture struggled with regex features that generate significant non-determinism. Constructs like complex alternations (`|`) or unbounded, non-greedy repetitions (`*?`, `+?`) often cause an explosion in the number of states when converted to a DFA, making the corresponding circuit impractically large or impossible to generate.
+-   **Regex Feature Support**: The architecture was best suited for patterns that mapped cleanly to DFAs. This posed challenges for features with significant non-determinism, such as complex alternations (`|`) or unbounded, non-greedy repetitions (`*?`, `+?`), which can cause an explosion in the number of DFA states.
 
--   **Fragile Capture Group Composition**: The strategy of manually joining part-DFAs was a brittle workaround. The resulting automaton was not guaranteed to be equivalent to a DFA generated from the complete regex, potentially leading to subtle semantic errors.
+-   **Capture Group Composition**: The strategy of joining part-DFAs was a practical method that required careful manual composition to ensure the resulting automaton was semantically equivalent to the complete regex.
 
--   **State Explosion**: Common regex constructs like `.*` or patterns with wide character ranges and unbounded repetitions often cause an explosion in the number of DFA states, making the corresponding circuits impractically large.
-
-These challenges motivated the new architecture in zk-Regex v2.
+The observations from v1's production use and these architectural considerations informed the design of the new architecture in zk-Regex v2.
 
 ### The v2 Vision: Separating Matching from Verification
 
-The limitations of v1 led to a new design centered on Non-deterministic Finite Automata (NFAs) and a separation of concerns: perform complex regex matching off-circuit, and use the circuit only for efficient verification.
+Building on the lessons learned from v1's production use, the v2 design is centered on Non-deterministic Finite Automata (NFAs) and a separation of concerns: perform complex regex matching off-circuit, and use the circuit only for efficient verification.
 
 #### 1. Adopting Non-deterministic Finite Automata (NFAs):
 
@@ -370,7 +363,7 @@ This compiler produces a standardized intermediate representation (`NFAGraph`). 
 
 ### Simplified and Accurate Capture Groups
 
-v1 handled capture groups by manually splitting a regex into parts. This process was cumbersome and could lead to semantic inconsistencies.
+In v1, capture groups were handled by manually splitting a regex into parts. This approach was effective for its specific use cases but required careful implementation to ensure semantic consistency.
 
 zk-Regex v2 handles capture groups more robustly:
 
