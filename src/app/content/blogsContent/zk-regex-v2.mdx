@@ -52,13 +52,16 @@ The ability to privately verify patterns in textual data is a fundamental buildi
 
 zk-Regex v1 was the first practical library of its kind to be used in production, successfully powering critical applications. These included:
 
--   [Bolstering sybil resistance mechanisms](https://x.com/zkemail/status/1907733539778605376)
+-   [Bolstering sybil resistance mechanisms](https://zk.email/blog/jupiter-and-soft-kyc-at-scale)
 -   [Enabling zk-p2p email proofs for financial transactions ](https://www.zkp2p.xyz)
 -   [Facilitating secure email-based recovery for Ethereum accounts](https://recovery.zk.email)
 
 The core strength of v1 lay in allowing users to selectively disclose specific strings and prove regex patterns within both email headers and bodies.
 
-The v1 architecture, while powerful for its intended applications, was based on an approach—directly translating Deterministic Finite Automata (DFAs) into circuits—that involved inherent architectural trade-offs. This design choice was effective for its specific use cases, but presented challenges for supporting a broader set of standard regex syntax, and for the patterns it did support, resulted in circuits whose size and cost scaled with DFA complexity.
+The v1 architecture, while powerful for its intended applications, was based on an approach—directly translating Deterministic Finite Automata (DFAs) into circuits—that involved inherent architectural trade-offs. This design choice was effective for its specific use cases but presented challenges in two main areas:
+
+-   **Feature Support**: It was difficult to support a broader set of standard regex syntax beyond what was required for its primary applications.
+-   **Scalability**: For the patterns it did support, the circuit's size and proving cost scaled directly with the complexity of the underlying DFA.
 
 This article introduces zk-Regex v2, which builds upon the lessons from v1 to introduce a new architecture. The v2 model separates the complex task of regex matching from the in-circuit verification, enabling support for a much broader set of regex features with more efficient circuit construction. We will detail the architectural updates in v2, which enable more powerful and flexible ZK-based text processing, setting the stage for applications beyond regex, such as verifiable JSON parsing.
 
@@ -137,13 +140,15 @@ The number of pre-instantiated components in a full circuit demonstrated the res
 
 #### 3. Selective Disclosure (Capture Groups) in v1:
 
-Capture groups were handled by tracking when the DFA traversal entered and exited the states corresponding to a part-DFA marked `is_public: true`. Input bytes processed within these state segments were conditionally outputted.
+In regular expressions, a **capture group** is a sub-pattern enclosed in parentheses `(...)`. Its purpose is to extract, or "capture," the portion of the input string that matches the pattern inside the parentheses. For example, in the regex `email: ([a-z]+@[a-z]+\.com)`, the parentheses create a capture group that extracts just the email address from a larger string like `"email: test@example.com"`.
+
+In v1, this concept was handled by tracking when the DFA traversal entered and exited the states corresponding to a part-DFA marked `is_public: true`. Input bytes processed within these state segments were conditionally outputted, effectively simulating the capture.
 
 #### 4. Architectural Considerations in v1:
 
 The direct DFA-in-circuit approach was a successful design with several key characteristics:
 
--   **Circuit Complexity and Size**: Directly encoding a DFA's transition table into arithmetic constraints meant that circuit size and proving cost scaled with the number of states in the DFA.
+-   **Circuit Complexity and Size**: Directly encoding a DFA's transition table into arithmetic constraints meant that circuit size and proving cost scaled with both the number of states in the DFA (a function of regex complexity) and the length of the input text. This created practical limits on the size of the emails that could be processed, as large inputs led to circuits that were too large to prove efficiently.
 
 -   **Regex Feature Support**: The architecture was best suited for patterns that mapped cleanly to DFAs. This posed challenges for features with significant non-determinism, such as complex alternations (`|`) or unbounded, non-greedy repetitions (`*?`, `+?`), which can cause an explosion in the number of DFA states.
 
@@ -160,8 +165,8 @@ Building on the lessons learned from v1's production use, the v2 design is cente
 The switch to NFAs as the foundational automaton was driven by several advantages:
 
 -   **Compactness**: NFAs are often significantly more compact than their DFA equivalents for regexes involving alternations, repetitions, or optional quantifiers.
--   **Robust NFA Construction**: v2 uses Rust's mature `regex_automata` library, which provides optimized and well-tested NFA representations directly from regex patterns.
--   **Native Capture Group Support**: The NFAs produced by `regex_automata` use special epsilon transitions (state transitions that do not consume input characters) to natively mark the entry and exit points of capture groups. This is a more robust solution than v1's part-DFA stitching and allows a single, cohesive NFA to represent the entire pattern with its capture groups.
+-   **Robust NFA Construction**: v2 uses Rust's mature [`regex_automata`](https://github.com/rust-lang/regex/tree/master/regex-automata) library. This provides optimized and well-tested NFA representations generated using a variant of [**Thompson's construction**](https://github.com/rust-lang/regex/blob/master/regex-automata/src/nfa/mod.rs), which produces NFAs that are structurally aligned with the original regex pattern.
+-   **Native Capture Group Support**: The NFAs produced by [`regex_automata`](https://github.com/rust-lang/regex/tree/master/regex-automata) use special epsilon transitions (state transitions that do not consume input characters) to natively mark the entry and exit points of capture groups. This is a more integrated solution than v1's part-DFA stitching and allows a single, cohesive NFA to represent the entire pattern.
 
 #### 2. The Core Architectural Change:
 
@@ -194,7 +199,7 @@ To make NFA verification efficient within a ZK circuit, the automaton must be tr
 
 ### From Regex to an Initial NFA
 
-The process starts by constructing a Non-deterministic Finite Automaton (NFA) from the input regex string. For this, zk-Regex v2 uses Rust's `regex_automata` library. This approach provides two main benefits:
+The process starts by constructing a Non-deterministic Finite Automaton (NFA) from the input regex string. For this, zk-Regex v2 uses Rust's [`regex_automata`](https://github.com/rust-lang/regex/tree/master/regex-automata) library. This approach provides two main benefits:
 
 -   **Optimized Construction**: The library uses a variant of Thompson's NFA construction, which produces NFAs that are structurally aligned with the regex and are often more compact than their DFA equivalents.
 -   **Native Capture Groups**: The generated NFAs use special epsilon transitions (via the `State::Capture` enum variant) to mark the boundaries of capture groups. This provides a single, integrated automaton with precise capture group information, avoiding the manual and fragile composition of part-DFAs used in v1.
@@ -221,7 +226,7 @@ While the general concept of removing epsilon transitions is standard in automat
 
 The algorithm consists of the following stages:
 
-1.  **Compute Epsilon Closures**: For each state `S`, find its "epsilon closure"—the set of all states reachable from `S` using only epsilon transitions. This process also records any capture group events (start/end markers) and accept states encountered along these paths.
+1.  **Compute Epsilon Closures**: For each state `S`, find its "epsilon closure" — the set of all states reachable from `S` using only epsilon transitions. This process also records any capture group events (start/end markers) and accept states encountered along these paths.
 
 2.  **Rewire Transitions**: Iterate through each state `S`. For each state `R` in the epsilon closure of `S`, if `R` has an outgoing byte transition `R --byte--> T`, create a new direct transition `S --byte--> T`. This new transition effectively bypasses the epsilon-only path from `S` to `R`.
 
@@ -249,7 +254,7 @@ An epsilon-free NFA is a graph structure. To use it in a circuit, we first "flat
 2.  A list of all valid **accept states**.
 3.  A complete set of all possible **byte-based transitions**, where each transition is a tuple containing `(source_state, byte_range, destination_state)` and any associated capture group events.
 
-This set of transitions becomes the immutable ruleset embedded within the ZK circuit. The method for checking against this ruleset depends on the features of the target circuit DSL.
+This set of transitions becomes the immutable ruleset embedded within the ZK circuit. The method for checking against this ruleset depends on the features of the target circuit DSL (Domain Specific Language).
 
 -   **For Circom**: Lacking native associative arrays, the circuit must iterate through the entire transition set for each byte of the claimed input path. It arithmetically confirms that the path's state change for that byte matches at least one of the valid transitions.
 -   **For Noir**: The transition set is encoded into a sparse array (a key-value map). A unique key is constructed from each `(current_state, byte, next_state)` tuple, which maps to a value encoding the transition's validity and its capture group data. This allows for more efficient, direct lookups.
@@ -298,7 +303,7 @@ The v2 architecture provides several significant improvements over the previous 
 
 ### Expanded Regex Support
 
-The primary advantage of the v2 architecture is its ability to support a much wider range of regular expression syntax. By moving the complex matching logic off-circuit, zk-Regex v2 can handle any pattern that the underlying `regex_automata` library can compile into an NFA.
+The primary advantage of the v2 architecture is its ability to support a much wider range of regular expression syntax. By moving the complex matching logic off-circuit, zk-Regex v2 can handle any pattern that the underlying [`regex_automata`](https://github.com/rust-lang/regex/tree/master/regex-automata) library can compile into an NFA.
 
 This enables robust support for many standard regex features that were difficult or impossible to implement in v1's direct-to-circuit model, including:
 
@@ -367,7 +372,7 @@ In v1, capture groups were handled by manually splitting a regex into parts. Thi
 
 zk-Regex v2 handles capture groups more robustly:
 
--   Capture groups are a native feature of the initial NFA generated by `regex_automata`.
+-   Capture groups are a native feature of the initial NFA generated by [`regex_automata`](https://github.com/rust-lang/regex/tree/master/regex-automata).
 -   The epsilon elimination algorithm is designed to preserve the precise start and end boundaries of these groups, associating them with the correct byte-consuming transitions.
 -   The circuit verifies the claimed capture group events against the NFA's rules at each step of the traversal path.
 
@@ -379,7 +384,7 @@ zk-Regex v2 is currently in an **alpha stage of development**. We encourage user
 
 -   **Performance Benchmarking**: Comprehensive performance data (e.g., constraint counts, proof generation times) is still being collected. The practical upper bounds on regex complexity and match length depend on the target proving system and user hardware. A detailed report will be released in a future publication.
 -   **Formal Audits**: The core algorithms have not yet been subjected to a formal external security audit or comprehensive fuzz testing. **We strongly advise against using zk-Regex v2 in production environments until these milestones are complete.**
--   **Feature Completeness**: While the architecture theoretically supports any regex compilable by `regex_automata`, extensive testing across all syntax edge cases is ongoing.
+-   **Feature Completeness**: While the architecture theoretically supports any regex compilable by [`regex_automata`](https://github.com/rust-lang/regex/tree/master/regex-automata), extensive testing across all syntax edge cases is ongoing.
 -   **Deprecation of v1**: With the release of this new architecture, zk-Regex v1 is officially deprecated and will no longer be maintained.
 
 We are actively working on these areas and welcome community feedback.
