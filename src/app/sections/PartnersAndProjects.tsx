@@ -28,25 +28,11 @@ const partnersLogos = [
     href: "https://ethereum.org/",
   },
   {
-    src: GitcoinPassportLogo,
-    alt: "Gitcoin Passport Logo",
+    src: ENSLogo,
+    alt: "ENS Logo",
     width: 150,
     height: 36,
-    href: "https://passport.gitcoin.co/",
-  },
-  {
-    src: RhinestoneLogo,
-    alt: "Rhinestone Logo",
-    width: 150,
-    height: 36,
-    href: "https://www.rhinestone.wtf/",
-  },
-  {
-    src: IYKLogo,
-    alt: "IYK Logo",
-    width: 100,
-    height: 36,
-    href: "https://iyk.app/",
+    href: "https://ens.domains/",
   },
   {
     src: OKXLogo,
@@ -70,18 +56,18 @@ const partnersLogos = [
     href: "https://www.openzeppelin.com/",
   },
   {
+    src: ZKP2PLogo,
+    alt: "ZKP2P Logo",
+    width: 150,
+    height: 36,
+    href: "https://zkp2p.xyz/",
+  },
+  {
     src: EdgeCityLogo,
     alt: "EdgeCity Logo",
     width: 150,
     height: 36,
     href: "https://www.edgecity.live/",
-  },
-  {
-    src: ENSLogo,
-    alt: "ENS Logo",
-    width: 150,
-    height: 36,
-    href: "https://ens.domains/",
   },
   {
     src: OpenPassportLogo,
@@ -98,11 +84,25 @@ const partnersLogos = [
     href: "https://www.getclave.io/",
   },
   {
-    src: ZKP2PLogo,
-    alt: "ZKP2P Logo",
+    src: GitcoinPassportLogo,
+    alt: "Gitcoin Passport Logo",
     width: 150,
     height: 36,
-    href: "https://zkp2p.xyz/",
+    href: "https://passport.gitcoin.co/",
+  },
+  {
+    src: IYKLogo,
+    alt: "IYK Logo",
+    width: 100,
+    height: 36,
+    href: "https://iyk.app/",
+  },
+  {
+    src: RhinestoneLogo,
+    alt: "Rhinestone Logo",
+    width: 150,
+    height: 36,
+    href: "https://www.rhinestone.wtf/",
   },
 ];
 
