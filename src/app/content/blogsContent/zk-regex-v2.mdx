@@ -98,6 +98,12 @@ The process began with a "decomposed regex" strategy, where a developer would sp
 
 Each `regex_def` was individually converted into a small DFA (hereafter a "part-DFA"). These part-DFAs were then linked sequentially by connecting the accepting states of one to the start state of the next, forming a single, larger DFA structure. The `is_public` flag marked the states corresponding to a given part for potential selective disclosure.
 
+The diagram below illustrates this process, showing how a complex regex is broken down into manageable parts, each converted to a DFA, and then combined into a final composed DFA:
+
+![v1 DFA Decomposition Process](/blog-media/zkregex-v2/v1-dfa-decomposition.png)
+
+_Figure 1: The v1 approach showing regex decomposition into parts, individual DFA construction, and final composition_
+
 #### 2. Direct DFA-to-Circuit Translation:
 
 The combined DFA was then translated into a Circom circuit that mirrored its state transition logic. For each input character, the circuit would evaluate the active DFA state, check the character against all possible transitions, and activate the next state. This required a large number of arithmetic components (`IsEqual`, `AND`, etc.) to encode the entire transition table, as shown in this simplified excerpt:
@@ -157,6 +163,12 @@ The observations from v1's production use and these architectural considerations
 ### The v2 Vision: Separating Matching from Verification
 
 Building on the lessons learned from v1's production use, the v2 design is centered on Non-deterministic Finite Automata (NFAs) and a separation of concerns: perform complex regex matching off-circuit, and use the circuit only for efficient verification.
+
+The architectural comparison between v1 and v2 is illustrated in the diagram below, which clearly shows the fundamental shift from in-circuit simulation to off-circuit matching with in-circuit verification:
+
+![v1 vs v2 Architecture Comparison](/blog-media/zkregex-v2/v1-vs-v2-architecture.png)
+
+_Figure 2: Architectural comparison showing v1's in-circuit DFA simulation versus v2's off-circuit NFA matching with in-circuit verification_
 
 #### 1. Adopting Non-deterministic Finite Automata (NFAs):
 
@@ -220,7 +232,13 @@ To resolve these issues, the epsilon transitions must be removed from the NFA be
 
 The solution is an algorithm that transforms the initial NFA into an equivalent one that is free of epsilon transitions, while preserving the original matching logic and capture group semantics.
 
-While the general concept of removing epsilon transitions is standard in automata theory, the implementation in zk-Regex v2 is specifically designed to maintain the integrity of capture group boundaries. The key assumption is that any meaningful capture group to be extracted must consume at least one byte.
+The transformation process is illustrated in the diagram below, showing how an NFA with epsilon transitions is converted to an equivalent epsilon-free version:
+
+![Epsilon Elimination Process](/blog-media/zkregex-v2/epsilon-elimination.png)
+
+_Figure 3: The epsilon elimination algorithm showing the transformation from an NFA with epsilon transitions to an equivalent epsilon-free NFA, with capture group markers preserved on byte-consuming transitions_
+
+The key assumption is that any meaningful capture group to be extracted must consume at least one byte.
 
 The algorithm consists of the following stages:
 
@@ -256,6 +274,12 @@ This set of transitions becomes the immutable ruleset embedded within the ZK cir
 
 -   **For Circom**: Lacking native associative arrays, the circuit must iterate through the entire transition set for each byte of the claimed input path. It arithmetically confirms that the path's state change for that byte matches at least one of the valid transitions.
 -   **For Noir**: The transition set is encoded into a sparse array (a key-value map). A unique key is constructed from each `(current_state, byte, next_state)` tuple, which maps to a value encoding the transition's validity and its capture group data. This allows for more efficient, direct lookups.
+
+The flattening process is illustrated in the diagram below, showing how the NFA graph structure is converted into a tabular format suitable for circuit verification:
+
+![NFA Flattening Process](/blog-media/zkregex-v2/nfa-flattening.png)
+
+_Figure 4: The NFA flattening process showing how the graph structure is converted into a structured transition table for circuit use_
 
 ### Off-Circuit Path Generation
 
