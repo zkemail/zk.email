@@ -86,6 +86,9 @@ const Footer = () => {
             <Link href="/privacy-policy" className="subtitle2 text-[##A8A8A8] hover:text-white transition-colors">
               Privacy Policy
             </Link>
+            <Link href="/brand-guide" className="subtitle2 text-[##A8A8A8] hover:text-white transition-colors">
+              Brand Guide
+            </Link>
             <Link
               href="https://zk.email/privacy-policy"
               className="subtitle2 text-[##A8A8A8] hover:text-white transition-colors"
