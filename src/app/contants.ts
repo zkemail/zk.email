@@ -4,6 +4,9 @@ const AccountRecoveryLogo = "/assets/Recovery.png";
 const BlueprintRegistryLogo = "/assets/Blueprint.png";
 const EmailWalletLogo = "/assets/EmailWallet.png";
 const ZKWhistleblowLogo = "/assets/ZKWhistleblow.png";
+const GithubLogo = "/assets/ProofOfGithub.png";
+const ArchiveLogo = "/assets/Archive.png";
+const Safe2FA = "/assets/Safe2FA.png";
 
 export const PROJECTS = [
   {
@@ -30,7 +33,7 @@ export const PROJECTS = [
   {
     title: "Safe 2FA",
     description: "Confirm any multisig transaction via an email.",
-    imgSrc: ZKWhistleblowLogo,
+    imgSrc: Safe2FA,
     link: "https://zk.email/blog/2fa"
   },
   {
@@ -55,7 +58,7 @@ export const PROJECTS = [
   {
     title: "ZK Proof of Github",
     description: "Prove you own a github account.",
-    imgSrc: ZKWhistleblowLogo,
+    imgSrc: GithubLogo,
     link: "https://registry.zk.email/526bb307-61ec-4c1d-8cd9-d393727b60c0"
   },
   {
@@ -67,7 +70,7 @@ export const PROJECTS = [
   {
     title: "DKIM Archive",
     description: "Archives over a million old DKIM keys and selectors for various domains.",
-    imgSrc: ZKWhistleblowLogo,
+    imgSrc: ArchiveLogo,
     link: "https://archive.zk.email"
   },
 ];
