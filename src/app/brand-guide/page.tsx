@@ -5,7 +5,6 @@ import Button from "../components/Button";
 import Image from "next/image";
 
 const BrandGuidePage = () => {
-  const [hoveredLogo, setHoveredLogo] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
 
   const downloadSVG = async (url: string, filename: string) => {
@@ -27,12 +26,12 @@ const BrandGuidePage = () => {
     }
   };
 
-  const copySVG = async (url: string, logoId: string) => {
+  const copySVG = async (url: string, sectionId: string) => {
     try {
       const response = await fetch(url);
       const svgContent = await response.text();
       await navigator.clipboard.writeText(svgContent);
-      setCopySuccess(logoId);
+      setCopySuccess(sectionId);
       setTimeout(() => setCopySuccess(null), 2000);
     } catch (error) {
       console.error('Copy failed:', error);
@@ -42,62 +41,62 @@ const BrandGuidePage = () => {
   const LogoContainer = ({ 
     src, 
     alt, 
-    logoId, 
-    filename, 
     className = "", 
-    containerClassName = "",
     imageClassName = ""
   }: {
     src: string;
     alt: string;
-    logoId: string;
-    filename: string;
     className?: string;
-    containerClassName?: string;
     imageClassName?: string;
   }) => (
-    <div 
-      className={`relative group transition-all duration-200 ${containerClassName}`}
-      onMouseEnter={() => setHoveredLogo(logoId)}
-      onMouseLeave={() => setHoveredLogo(null)}
-    >
-      <div className={className}>
-        <img 
-          src={src}
-          alt={alt}
-          className={imageClassName}
-        />
-      </div>
-      
-      {/* Top Right Icon Buttons */}
-      {hoveredLogo === logoId && (
-        <div className="absolute top-2 right-2 flex space-x-2">
-          <button
-            onClick={() => copySVG(src, logoId)}
-            className="bg-gray-700 hover:bg-gray-800 text-white p-2 rounded-lg transition-colors duration-200"
-            title="Copy SVG"
-          >
-            {copySuccess === logoId ? (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            )}
-          </button>
-          <button
-            onClick={() => downloadSVG(src, filename)}
-            className="bg-gray-700 hover:bg-gray-800 text-white p-2 rounded-lg transition-colors duration-200"
-            title="Download SVG"
-          >
+    <div className={className}>
+      <img 
+        src={src}
+        alt={alt}
+        className={imageClassName}
+      />
+    </div>
+  );
+
+  const SectionHeader = ({ 
+    title, 
+    svgUrl, 
+    filename, 
+    sectionId 
+  }: { 
+    title: string; 
+    svgUrl: string; 
+    filename: string; 
+    sectionId: string; 
+  }) => (
+    <div className="flex items-center gap-4">
+      <h2 className="h2 text-white">{title}</h2>
+      <div className="flex space-x-2">
+        <button
+          onClick={() => copySVG(svgUrl, sectionId)}
+          className="bg-gray-800 hover:bg-gray-900 text-white p-2 rounded-lg transition-colors duration-200"
+          title="Copy SVG"
+        >
+          {copySuccess === sectionId ? (
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-          </button>
-        </div>
-      )}
+          ) : (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          )}
+        </button>
+        <button
+          onClick={() => downloadSVG(svgUrl, filename)}
+          className="bg-gray-800 hover:bg-gray-900 text-white p-2 rounded-lg transition-colors duration-200"
+          title="Download SVG"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 
@@ -105,7 +104,7 @@ const BrandGuidePage = () => {
     <div className="grid-container">
       <div className="noise-layer"></div>
       <div className="noise-container">
-        <div className="container-width mx-auto px-6 py-32 space-y-24">
+        <div className="container-width mx-auto px-6 py-36 space-y-24">
           {/* Header Section */}
           <div className="max-w-6xl mx-auto text-center space-y-8">
             <div className="space-y-4">
@@ -145,21 +144,81 @@ const BrandGuidePage = () => {
                   <div className="flex gap-3 items-start">
                     <div className="w-3 h-3 rotate-[-45deg] rounded-[2.268px] border border-[#2962A5] bg-[#062E5D] mt-1 flex-shrink-0"></div>
                     <p className="body1 text-gray-300 leading-relaxed">
-                      <strong className="text-white">"ZK Email"</strong> is spelled with capital "Z", "K", and "E"
+                      <strong className="text-white">&ldquo;ZK Email&rdquo;</strong> is spelled with capital &ldquo;Z&rdquo;, &ldquo;K&rdquo;, and &ldquo;E&rdquo;
                     </p>
                   </div>
                   
                   <div className="flex gap-3 items-start">
                     <div className="w-3 h-3 rotate-[-45deg] rounded-[2.268px] border border-[#2962A5] bg-[#062E5D] mt-1 flex-shrink-0"></div>
                     <p className="body1 text-gray-300 leading-relaxed">
-                      <strong className="text-white">"zkemail"</strong> is spelled with lowercase "z", "k", and "e"
+                      <strong className="text-white">&ldquo;zkemail&rdquo;</strong> is spelled with lowercase &ldquo;z&rdquo;, &ldquo;k&rdquo;, and &ldquo;e&rdquo; with no spaces
                     </p>
                   </div>
                 </div>
                 
                 <p className="body1 text-gray-300 leading-relaxed">
-                  It is the brand name of both our organization and our products. Provide plenty of space around ZK Email assets. Make them big or make them small, but give them room to breathe. They shouldn't feel cramped or cluttered.
+                  It is the brand name of both our organization and our products. Provide plenty of space around ZK Email assets. Make them big or make them small, but give them room to breathe. They shouldn&apos;t feel cramped or cluttered.
                 </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Brand Guideline Download Section */}
+          <section className="max-w-6xl mx-auto">
+            <div className="bg-black/20 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                {/* Cover Image */}
+                <div className="relative">
+                  <div className="aspect-[16/9] overflow-hidden">
+                    <Image
+                      src="/assets/ZKSlab.png"
+                      alt="ZK Email Brand Guide Cover"
+                      fill
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
+                </div>
+                
+                {/* Download Content */}
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-bold text-white">Complete Brand Book</h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      Download our comprehensive brand guideline document containing detailed usage instructions and common dos and don&apos;ts.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {/* <h4 className="text-lg font-semibold text-white">What's included:</h4> */}
+                    <ul className="space-y-2 text-gray-300">
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 rotate-[-45deg] rounded-[2.268px] border border-[#2962A5] bg-[#062E5D] flex-shrink-0"></div>
+                        Logo usage guidelines and variations
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 rotate-[-45deg] rounded-[2.268px] border border-[#2962A5] bg-[#062E5D] flex-shrink-0"></div>
+                        Color palette and specifications
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 rotate-[-45deg] rounded-[2.268px] border border-[#2962A5] bg-[#062E5D] flex-shrink-0"></div>
+                        Do&apos;s and don&apos;ts for brand application
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="flex justify-start">
+                    <a
+                      href="/assets/ZKEmailBrandBook.pdf"
+                      download="zkemail Brand Book.pdf"
+                      className="flex flex-row justify-between items-center gap-2 border-solid border-[2px] rounded-[12px] px-[16px] py-[5px] font-semibold border-[#3B3B3B] bg-[#1C1C1C] text-[#F5F3EF] hover:bg-[#2C2C2C] transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Download PDF
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -167,7 +226,12 @@ const BrandGuidePage = () => {
           {/* Brandmark Section */}
           <section className="max-w-6xl mx-auto space-y-12">
             <div className="space-y-6">
-              <h2 className="h2 text-white">Brandmark</h2>
+              <SectionHeader
+                title="Brandmark"
+                svgUrl="/assets/Logo.svg"
+                filename="zkemail-brandmark.svg"
+                sectionId="brandmark"
+              />
               <div className="space-y-6">
                 <p className="body1 text-gray-300 leading-relaxed">
                   The ZK Email brandmark should be used in all references to ZK Email as space allows. Monochrome usage is preferred with the brand colors to the left.
@@ -178,8 +242,6 @@ const BrandGuidePage = () => {
                   <LogoContainer
                     src="/assets/Logo.svg"
                     alt="ZK Email Logo"
-                    logoId="brandmark-primary"
-                    filename="zkemail-logo-primary.svg"
                     className="bg-gray-900 rounded-lg flex items-center justify-center min-h-[200px]"
                     imageClassName="w-40 h-auto"
                   />
@@ -188,21 +250,18 @@ const BrandGuidePage = () => {
                   <LogoContainer
                     src="/assets/Logo.svg"
                     alt="ZK Email Logo on White"
-                    logoId="brandmark-white-bg"
-                    filename="zkemail-logo-white-bg.svg"
                     className="bg-white rounded-lg flex items-center justify-center min-h-[200px]"
                     imageClassName="w-40 h-auto filter invert"
                   />
                   
                   {/* Brand Color Version */}
-                  <LogoContainer
-                    src="/assets/Logo.svg"
-                    alt="ZK Email Logo on Brand Color"
-                    logoId="brandmark-brand-color"
-                    filename="zkemail-logo-brand-color.svg"
-                    className="bg-blue-600 rounded-lg flex items-center justify-center min-h-[200px]"
-                    imageClassName="w-40 h-auto"
-                  />
+                  <div className="rounded-lg flex items-center justify-center min-h-[200px]" style={{ backgroundColor: '#2962A5' }}>
+                    <img 
+                      src="/assets/Logo.svg"
+                      alt="ZK Email Logo on Brand Color"
+                      className="w-40 h-auto"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -211,7 +270,12 @@ const BrandGuidePage = () => {
           {/* Logo Section */}
           <section className="max-w-6xl mx-auto space-y-12">
             <div className="space-y-6">
-              <h2 className="h2 text-white">Logo</h2>
+              <SectionHeader
+                title="Logo"
+                svgUrl="/assets/ShortLogo.svg"
+                filename="zkemail-logo.svg"
+                sectionId="logo"
+              />
               <div className="space-y-6">
                 <p className="body1 text-gray-300 leading-relaxed">
                   For tight layouts or logo-only grids, the ZK Email logomark is a concise way to refer to ZK Email. Use with good judgment for your audience, as the ZK Email wordmark has stronger brand recognition.
@@ -221,8 +285,6 @@ const BrandGuidePage = () => {
                   <LogoContainer
                     src="/assets/ShortLogo.svg"
                     alt="ZK Email Short Logo"
-                    logoId="logo-primary"
-                    filename="zkemail-logomark-primary.svg"
                     className="bg-gray-900 rounded-lg p-6 flex items-center justify-center min-h-[150px]"
                     imageClassName="w-28 h-auto"
                   />
@@ -230,26 +292,21 @@ const BrandGuidePage = () => {
                   <LogoContainer
                     src="/assets/ShortLogo.svg"
                     alt="ZK Email Short Logo on White"
-                    logoId="logo-white-bg"
-                    filename="zkemail-logomark-white-bg.svg"
                     className="bg-white rounded-lg p-6 flex items-center justify-center min-h-[150px]"
                     imageClassName="w-28 h-auto filter invert"
                   />
                   
-                  <LogoContainer
-                    src="/assets/ShortLogo.svg"
-                    alt="ZK Email Short Logo on Brand Color"
-                    logoId="logo-brand-color"
-                    filename="zkemail-logomark-brand-color.svg"
-                    className="bg-blue-600 rounded-lg p-6 flex items-center justify-center min-h-[150px]"
-                    imageClassName="w-28 h-auto"
-                  />
+                  <div className="rounded-lg p-6 flex items-center justify-center min-h-[150px]" style={{ backgroundColor: '#2962A5' }}>
+                    <img 
+                      src="/assets/ShortLogo.svg"
+                      alt="ZK Email Short Logo on Brand Color"
+                      className="w-28 h-auto"
+                    />
+                  </div>
                   
                   <LogoContainer
                     src="/assets/ShortLogo.svg"
                     alt="ZK Email Short Logo on Gray"
-                    logoId="logo-gray-bg"
-                    filename="zkemail-logomark-gray-bg.svg"
                     className="bg-gray-700 rounded-lg p-6 flex items-center justify-center min-h-[150px]"
                     imageClassName="w-28 h-auto"
                   />
@@ -264,16 +321,16 @@ const BrandGuidePage = () => {
               <h2 className="h2 text-white">Colors</h2>
               <div className="space-y-6">
                 <p className="body1 text-gray-300 leading-relaxed">
-                  ZK Email's primary brand color is blue. White and off-black are preferred for monochrome brandmark usage, while the brand color is typically reserved for backgrounds and accents.
+                  ZK Email&apos;s primary brand color is blue. White and off-black are preferred for monochrome brandmark usage, while the brand color is typically reserved for backgrounds and accents.
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {/* Primary Blue */}
                   <div className="space-y-3">
-                    <div className="bg-blue-600 rounded-lg h-24 w-full"></div>
+                    <div className="rounded-lg h-24 w-full" style={{ backgroundColor: '#2962A5' }}></div>
                     <div className="text-center">
-                      <p className="text-white font-medium">Primary Blue</p>
-                      <p className="text-gray-400 text-sm">#2563EB</p>
+                      <p className="text-white font-medium">Privacy Blue</p>
+                      <p className="text-gray-400 text-sm">#2962A5</p>
                     </div>
                   </div>
                   
@@ -281,7 +338,7 @@ const BrandGuidePage = () => {
                   <div className="space-y-3">
                     <div className="bg-white rounded-lg h-24 w-full border border-gray-600"></div>
                     <div className="text-center">
-                      <p className="text-white font-medium">White</p>
+                      <p className="text-white font-medium">True White</p>
                       <p className="text-gray-400 text-sm">#FFFFFF</p>
                     </div>
                   </div>
@@ -290,7 +347,7 @@ const BrandGuidePage = () => {
                   <div className="space-y-3">
                     <div className="bg-gray-900 rounded-lg h-24 w-full"></div>
                     <div className="text-center">
-                      <p className="text-white font-medium">Off Black</p>
+                      <p className="text-white font-medium">ZK Black</p>
                       <p className="text-gray-400 text-sm">#111314</p>
                     </div>
                   </div>
@@ -299,7 +356,7 @@ const BrandGuidePage = () => {
                   <div className="space-y-3">
                     <div className="bg-gray-600 rounded-lg h-24 w-full"></div>
                     <div className="text-center">
-                      <p className="text-white font-medium">Gray</p>
+                      <p className="text-white font-medium">Regex Gray</p>
                       <p className="text-gray-400 text-sm">#A8A8A8</p>
                     </div>
                   </div>
