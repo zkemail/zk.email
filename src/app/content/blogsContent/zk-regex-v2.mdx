@@ -67,7 +67,7 @@ This article introduces zk-Regex v2, which builds upon the lessons from v1 to in
 
 ### The v1 Approach (A Quick Look Back)
 
-The initial version of zk-Regex translated regular expressions into verifiable ZK circuits by directly embedding a Deterministic Finite Automaton (DFA) into an arithmetic circuit.
+The initial version of zk-Regex translated regular expressions into verifiable ZK circuits by directly embedding a [Deterministic Finite Automaton (DFA)](https://en.wikipedia.org/wiki/Deterministic_finite_automaton) into an arithmetic circuit.
 
 #### 1. Regex Decomposition and DFA Construction:
 
@@ -78,19 +78,15 @@ The process began with a "decomposed regex" strategy, where a developer would sp
     "parts": [
         {
             "is_public": false,
-            "regex_def": "(\r\n|^)dkim-signature:"
-        },
-        {
-            "is_public": false,
-            "regex_def": "([a-z]+=[^;]+; )+bh="
+            "regex_def": "email:"
         },
         {
             "is_public": true,
-            "regex_def": "[a-zA-Z0-9+/=]+"
+            "regex_def": "[a-z]+@[a-z]+.com"
         },
         {
             "is_public": false,
-            "regex_def": ";"
+            "regex_def": "."
         }
     ]
 }
@@ -98,7 +94,7 @@ The process began with a "decomposed regex" strategy, where a developer would sp
 
 Each `regex_def` was individually converted into a small DFA (hereafter a "part-DFA"). These part-DFAs were then linked sequentially by connecting the accepting states of one to the start state of the next, forming a single, larger DFA structure. The `is_public` flag marked the states corresponding to a given part for potential selective disclosure.
 
-The diagram below illustrates this process, showing how a complex regex is broken down into manageable parts, each converted to a DFA, and then combined into a final composed DFA:
+Each DFA is a [Directed Acyclic Graph (DAG)](https://en.wikipedia.org/wiki/Directed_acyclic_graph)—a network of nodes (states) connected by directed edges (transitions) with no cycles, meaning you can't traverse back to a previous state. The diagram below illustrates this process, showing how a complex regex is broken down into manageable parts, each converted to a DFA, and then combined into a final composed DFA:
 
 ![v1 DFA Decomposition Process](/blog-media/zkregex-v2/v1-dfa-decomposition.png)
 
@@ -169,6 +165,20 @@ The architectural comparison between v1 and v2 is illustrated in the diagram bel
 ![v1 vs v2 Architecture Comparison](/blog-media/zkregex-v2/v1-vs-v2-architecture.png)
 
 _Figure 2: Architectural comparison showing v1's in-circuit DFA simulation versus v2's off-circuit NFA matching with in-circuit verification_
+
+**v1 Architecture Steps:**
+
+-   **Step 1 - Compilation**: Converts the regex directly into a circuit that embeds the full DFA transition logic. The circuit contains all possible state transitions and must simulate the entire automaton execution.
+
+-   **Step 2 - Proving**: Takes the haystack (input text) and runs it through the circuit, which simultaneously matches the regex pattern and generates the proof. All regex processing happens inside the ZK circuit.
+
+**v2 Architecture Steps:**
+
+-   **Step 1 - Compilation**: Converts the regex into both a circuit (for verification) and an NFA graph (for matching). The circuit only contains transition validation rules, not the full execution logic.
+
+-   **Step 2 - Regex Matching**: Uses the NFA graph to find matches in the haystack off-circuit. Generates a traversal path (sequence of state transitions) and prepares circuit inputs containing only the matched segment and its path.
+
+-   **Step 3 - Proving**: The circuit verifies the provided traversal path against its embedded NFA rules. No regex execution occurs in-circuit—only validation of the pre-computed path.
 
 #### 1. Adopting Non-deterministic Finite Automata (NFAs):
 
@@ -302,13 +312,27 @@ Only if all these checks pass does the circuit accept the proof as valid and pro
 
 #### Encoding Strategy for Noir
 
-Noir's sparse array uses a Random Linear Combination (RLC) to generate a unique key for each transition, preventing collisions. For a transition `(current_state, byte, next_state)`, the key is calculated as:
+Noir uses a [sparse array](https://github.com/noir-lang/sparse_array) data structure to efficiently store and lookup transition rules. A sparse array stores only non-zero values with their corresponding indices, making it ideal for NFAs where most state-to-state transitions don't exist.
+
+The sparse array maps unique keys to transition data. For each valid transition `(current_state, byte, next_state)`, a unique key is generated using a Random Linear Combination (RLC):
 
 ```
 key = current_state + byte * 257 + next_state * 257^2
 ```
 
-where `257` is chosen to be larger than the maximum byte value (255), ensuring each component of the tuple occupies a unique position in the resulting value.
+**How the Key Works:**
+
+-   **Unique Positioning**: Each component occupies a distinct "digit position" in base-257 arithmetic
+-   **No Collisions**: Since 257 > 255 (max byte value), no two different transitions can produce the same key
+-   **Direct Lookup**: The circuit can instantly check if a claimed transition exists by computing its key and looking it up in the sparse array
+
+**Example**: For transition (state=5, byte=65, next_state=12):
+
+```
+key = 5 + 65 * 257 + 12 * 257^2 = 5 + 16,705 + 790,668 = 807,378
+```
+
+The sparse array value at this key contains the transition's validity flag and any associated capture group markers. This enables O(1) lookup time instead of iterating through all possible transitions, making Noir circuits significantly more efficient for complex regexes.
 
 #### Performance Characteristics
 
@@ -376,7 +400,7 @@ The design is resistant to several attack vectors:
 
 The v2 architecture changes how performance scales:
 
--   **Decoupled Complexity**: Circuit size is no longer directly tied to the complexity of the regex pattern. Instead, it is primarily influenced by the maximum length of the _match_ and the number of capture groups. A complex regex that produces a short match can result in a relatively small circuit.
+-   **Decoupled Complexity**: Circuit size is no longer directly tied to the complexity of the regex pattern. Instead, it is primarily influenced by the maximum length of the _match_ and the number of capture groups. A complex regex that produces a short match can result in a relatively small circuit - because the runtime cost being linear to the match length and not the regex complexity.
 -   **Targeted Proving**: The proving cost scales with the length of the matched substring, not the entire haystack, making it efficient for finding patterns in large documents.
 -   **Efficient Resource Use**: The CPU-intensive task of regex matching is handled off-circuit, reserving the more costly ZK circuit resources for the streamlined verification task.
 
@@ -464,12 +488,12 @@ As a foundational tool for verifiable text-pattern matching, zk-Regex v2 enables
 
 #### Getting Started
 
-We encourage the community to explore the zk-Regex v2 compiler. The primary entry point is the `zk-regex-compiler` CLI tool, with the following workflow:
+We encourage the community to explore the [zk-Regex v2 compiler](https://github.com/zkemail/zk-regex/tree/feat/new-compiler). The primary entry point is the `zk-regex-compiler` CLI tool, with the following workflow:
 
 1.  **Compile**: Use the `raw` or `decomposed` command to compile a regex pattern into circuit code (Circom/Noir) and a reusable NFA graph file.
 2.  **Generate Inputs**: Use the `generate-circuit-input` command with the NFA graph and input text to create the private inputs for the prover.
 3.  **Prove**: Integrate the generated circuit and inputs into your project to create and verify proofs.
 
-For detailed instructions and examples, please refer to the project's main `README.md`.
+For detailed instructions and examples, please refer to the project's [README.md](https://github.com/zkemail/zk-regex/blob/feat/new-compiler/README.md).
 
-_(A detailed technical paper with a formal specification of the epsilon elimination algorithm and performance benchmarks is forthcoming.)_
+_(A detailed technical paper with a formal specification of the epsilon elimination algorithm and performance benchmarks will be published soon.)_
