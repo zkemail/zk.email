@@ -12,7 +12,7 @@ const OpenZeppelinLogo = "/assets/OpenZeppelin.svg";
 const RhinestoneLogo = "/assets/Rhinestone.svg";
 const OKXLogo = "/assets/OKX.svg";
 const EdgeCityLogo = "/assets/Edgecity.svg";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import ProjectCard from "../components/ProjectCard";
 import Link from "next/link";
 import Image from "next/image";
