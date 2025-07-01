@@ -25,9 +25,7 @@ const PostContent = ({ meta, content }) => {
           {meta.description}
         </p>
         <p className="subtitle2" style={{ color: "#A8A8A8" }}>
-          {meta.authors?.map((author) => (
-            <span key={author}>{author}</span>
-          ))}{" "}
+          {meta.authors?.join(", ")}
           <span className="mx-2">◆</span>
           {new Date(meta.date).toISOString().split("T")[0] ?? "N/A"}{" "}
           <span className="mx-2">◆</span> {meta.category}
