@@ -12,45 +12,56 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: '/blog/zkemail-audits',
-        destination: '/blog/audits',
+        source: "/blog/zkemail-audits",
+        destination: "/blog/audits",
         permanent: true,
       },
       {
-        source: '/blog/audit',
-        destination: '/blog/audits',
+        source: "/blog/audit",
+        destination: "/blog/audits",
         permanent: true,
       },
       {
-        source: '/blog/recovery',
-        destination: '/blog/account-recovery',
+        source: "/blog/recovery",
+        destination: "/blog/account-recovery",
         permanent: true,
       },
       {
-        source: '/blog/safe',
-        destination: '/case-studies/safe-account-recovery',
+        source: "/blog/safe",
+        destination: "/case-studies/safe-account-recovery",
         permanent: true,
-      }, 
+      },
       {
-        source: '/blog/jupiter',
-        destination: '/blog/jupiter-and-soft-kyc-at-scale',
+        source: "/blog/jupiter",
+        destination: "/blog/jupiter-and-soft-kyc-at-scale",
         permanent: true,
-      }, 
+      },
       {
-        source: '/blog/jup',
-        destination: '/blog/jupiter-and-soft-kyc-at-scale',
+        source: "/blog/jup",
+        destination: "/blog/jupiter-and-soft-kyc-at-scale",
         permanent: true,
-      }, 
+      },
       {
-        source: '/blog/kyc',
-        destination: '/blog/jupiter-and-soft-kyc-at-scale',
+        source: "/blog/kyc",
+        destination: "/blog/jupiter-and-soft-kyc-at-scale",
         permanent: false,
-      }, 
+      },
       {
-        source: '/case-studies/safe',
-        destination: '/case-studies/safe-account-recovery',
+        source: "/case-studies/safe",
+        destination: "/case-studies/safe-account-recovery",
         permanent: true,
-      }
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "prove.email",
+          },
+        ],
+        destination: "https://zk.email/:path*",
+        permanent: true,
+      },
     ];
   },
 };
