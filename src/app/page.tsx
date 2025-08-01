@@ -1,6 +1,7 @@
 import Hero from "./sections/Hero";
 import PartnersAndProjects from "./sections/PartnersAndProjects";
 import HowZKEmailWorks from "./sections/HowZKEmailWorks";
+import TweetSection from "./sections/TweetSection";
 import Resources from "./sections/Resources";
 import FAQs from "./sections/FAQs";
 
@@ -20,6 +21,7 @@ export default function Home() {
         <Hero />
         <PartnersAndProjects />
         <HowZKEmailWorks />
+        <TweetSection />
         <Resources />
         <FAQs />
       </div>
