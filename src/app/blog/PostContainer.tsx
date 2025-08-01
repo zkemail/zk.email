@@ -40,7 +40,7 @@ const PostContainer = ({ post, type = 'blog' }: PostContainerProps) => {
             "/blog-media/email-account-recovery/webp/banner.webp"
           }
           alt={post.title}
-          className="w-full lg:w-auto object-cover"
+          className="w-full lg:w-auto"
         />
         <div>
           <p className="h4 font-semibold" style={{ color: "#F5F3EF" }}>

@@ -42,13 +42,12 @@ const Hero = () => {
             letterSpacing: "-0.6px",
             fontStyle: "normal",
             alignSelf: "stretch",
-            lineHeight: "1.15",
           }}
         >
-          <p className="h3" style={{ marginBottom: "0rem" }}>
-            Building trustable identity through <br /> intuitive, private email
+          <span className="hidden sm:inline">
+            Building trustable identity through intuitive, private email
             verification
-          </p>
+          </span>
           <span className="sm:hidden">
             Bringing trust through intuitive email proofs
           </span>
@@ -58,7 +57,7 @@ const Hero = () => {
           className="subtitle1"
           style={{
             ...subtitleStyles,
-            marginTop: "0.5rem",
+            marginTop: "1rem",
             textWrap: "balance",
           }}
         >
@@ -67,7 +66,7 @@ const Hero = () => {
         </p>
         <div
           ref={buttonRef}
-          className="flex gap-8 justify-center pt-4  sm:pt-10 lg:pt-4"
+          className="flex gap-8 justify-center pt-6  sm:pt-10 lg:pt-8"
           style={buttonStyles}
         >
           <Button
