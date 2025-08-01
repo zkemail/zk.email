@@ -48,9 +48,6 @@ const Hero = () => {
             Building trustable identity through intuitive, private email
             verification
           </span>
-          <span className="sm:hidden">
-            Bringing trust through intuitive email proofs
-          </span>
         </p>
         <p
           ref={subtitleRef}
@@ -59,6 +56,7 @@ const Hero = () => {
             ...subtitleStyles,
             marginTop: "1rem",
             textWrap: "balance",
+            marginBottom: "0.5rem"
           }}
         >
           Extensive set of open source SDKs, libraries, and
@@ -121,7 +119,7 @@ const Hero = () => {
           className="image-mobile"
           style={{
             maxWidth: "70vw",
-            maxHeight: "calc(50vh - 1.5rem)",
+            maxHeight: "calc(50vh - 1rem)",
             borderRadius: "24px 24px 0 0",
             boxShadow:
               "0px -4px 32px 0px rgba(0, 0, 0, 0.32), 0px 4px 4px 0px rgba(29, 29, 29, 0.60) inset",
@@ -132,7 +130,7 @@ const Hero = () => {
           loading="eager"
           placeholder="blur"
           blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 412 922'%3E%3Cfilter id='b' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='20'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23718096'/%3E%3C/svg%3E"
-          sizes="(max-width: 768px) 70vw, 412px"
+          sizes="(max-width: 720px) 70vw, 412px"
         />
         <Image
           src={"/assets/HeroImg.webp"}
