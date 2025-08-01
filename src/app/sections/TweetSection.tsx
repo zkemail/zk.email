@@ -20,7 +20,7 @@ const FAMOUS_TWEETS = [
     title: "ZKP2P Team",
     profileImage: "/assets/richard-profile.jpg",
     content: "It's still the only primitive in production that provides true data provenance--data is signed at source with no trust needed in a 3rd party notary.",
-    tweetUrl: "https://x.com/richardzliang/status/1821668593689620877"
+    tweetUrl: "https://x.com/richardzliang/status/1828992045844746727"
   },
   {
     id: 3,
