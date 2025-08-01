@@ -38,9 +38,17 @@ const Button = ({
           color === "primary" ? (disabled ? "#3B3B3B" : "#F5F3EF") : "#161819",
       }}
     >
-      {startIcon}
+      {startIcon && (
+        <div className={disabled ? "opacity-20" : "opacity-100"}>
+          {startIcon}
+        </div>
+      )}
       {children}
-      {endIcon}
+      {endIcon && (
+        <div className={disabled ? "opacity-20" : "opacity-100"}>
+          {endIcon}
+        </div>
+      )}
     </button>
   );
 };
