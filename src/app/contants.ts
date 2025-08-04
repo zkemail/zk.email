@@ -4,9 +4,9 @@ const AccountRecoveryLogo = "/assets/Recovery.png";
 const BlueprintRegistryLogo = "/assets/Blueprint.png";
 const EmailWalletLogo = "/assets/EmailWallet.png";
 const ZKWhistleblowLogo = "/assets/ZKWhistleblow.png";
-const GithubLogo = "/assets/ProofOfGithub.png";
-const ArchiveLogo = "/assets/Archive.png";
-const Safe2FA = "/assets/Safe2FA.png";
+const ArchiveLogo = "/assets/ArchiveLogo.png";
+const GithubLogo = "/assets/GithubLogo.png";
+const Safe2FALogo = "/assets/Safe2FA.png";
 
 export const PROJECTS = [
   {
@@ -33,7 +33,7 @@ export const PROJECTS = [
   {
     title: "Safe 2FA",
     description: "Confirm any multisig transaction via an email.",
-    imgSrc: Safe2FA,
+    imgSrc: Safe2FALogo,  
     link: "https://zk.email/blog/2fa"
   },
   {
