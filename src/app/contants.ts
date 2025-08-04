@@ -6,7 +6,7 @@ const EmailWalletLogo = "/assets/EmailWallet.png";
 const ZKWhistleblowLogo = "/assets/ZKWhistleblow.png";
 const ArchiveLogo = "/assets/ArchiveLogo.png";
 const GithubLogo = "/assets/GithubLogo.png";
-const Safe2FALogo = "/assets/Safe2FA.png";
+const Safe2FALogo = "/assets/Safe2FALogo.png";
 
 export const PROJECTS = [
   {
