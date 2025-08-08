@@ -44,7 +44,7 @@ const Hero = () => {
             alignSelf: "stretch",
           }}
         >
-          <span className="hidden sm:inline">
+          <span className="sm:inline">
             Building trustable identity through intuitive, private email
             verification
           </span>
