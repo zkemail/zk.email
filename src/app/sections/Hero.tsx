@@ -45,7 +45,7 @@ const Hero = () => {
             lineHeight: "1.15",
           }}
         >
-          <p className="h3" style={{ marginBottom: "0rem" }}>
+          <p className="h3 hidden sm:block" style={{ marginBottom: "0rem" }}>
             Building trustable identity through <br /> intuitive, private email
             verification
           </p>
