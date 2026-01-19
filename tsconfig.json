@@ -28,6 +28,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/lib/index.js",
+    "src/lib/mdx-cache.js",
     "src/app/blog/[slug]/page.jsx"
   ],
   "exclude": ["node_modules"]

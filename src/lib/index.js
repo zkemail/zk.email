@@ -2,7 +2,7 @@
 
 import fs from "fs";
 import path from "path";
-import { compileMDX } from "next-mdx-remote/rsc";
+import { cachedCompileMDX } from "./mdx-cache";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -49,9 +49,10 @@ export const getPostBySlug = async (slug) => {
     return { meta: { slug: realSlug }, content: "" };
   }
 
-  const { frontmatter, content } = await compileMDX({
-    source: fileContent,
-    options: {
+  const { frontmatter, content } = await cachedCompileMDX(
+    filePath,
+    fileContent,
+    {
       parseFrontmatter: true,
       mdxOptions: {
         // problem with remarkGfm?
@@ -65,8 +66,8 @@ export const getPostBySlug = async (slug) => {
           rehypePrettyCode,
         ],
       },
-    },
-  });
+    }
+  );
 
   return { meta: { ...frontmatter, slug: realSlug }, content };
 };
@@ -78,9 +79,10 @@ const getChangeLogsByDate = async (date) => {
 
   const fileContent = fs.readFileSync(filePath, { encoding: "utf8" });
 
-  const { frontmatter, content } = await compileMDX({
-    source: fileContent,
-    options: {
+  const { frontmatter, content } = await cachedCompileMDX(
+    filePath,
+    fileContent,
+    {
       parseFrontmatter: true,
       mdxOptions: {
         // problem with remarkGfm?
@@ -94,8 +96,8 @@ const getChangeLogsByDate = async (date) => {
           rehypePrettyCode,
         ],
       },
-    },
-  });
+    }
+  );
 
   return { ...frontmatter, slug: realSlug, content };
 };
@@ -158,9 +160,10 @@ export const getCaseStudyBySlug = async (slug) => {
     throw error;
   }
 
-  const { frontmatter, content } = await compileMDX({
-    source: fileContent,
-    options: {
+  const { frontmatter, content } = await cachedCompileMDX(
+    filePath,
+    fileContent,
+    {
       parseFrontmatter: true,
       mdxOptions: {
         remarkPlugins: [remarkMath, remarkGfm],
@@ -172,8 +175,8 @@ export const getCaseStudyBySlug = async (slug) => {
           rehypePrettyCode,
         ],
       },
-    },
-  });
+    }
+  );
 
   return { meta: { ...frontmatter, slug: realSlug }, content };
 };
