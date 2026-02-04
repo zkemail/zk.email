@@ -7,8 +7,16 @@ const ZKWhistleblowLogo = "/assets/ZKWhistleblow.png";
 const ArchiveLogo = "/assets/ArchiveLogo.png";
 const GithubLogo = "/assets/GithubLogo.png";
 const Safe2FALogo = "/assets/Safe2FALogo.png";
+const WhistleblowLogo = "/assets/WhistleblowLogo.png";
 
 export const PROJECTS = [
+  {
+    title: "Blueprint Registry",
+    description:
+      "List of community submitted ZK Email blueprints to prove different kinds of emails",
+    imgSrc: BlueprintRegistryLogo,
+    link: "https://registry.zk.email"
+  },
   {
     title: "Account Recovery",
     description:
@@ -17,11 +25,11 @@ export const PROJECTS = [
     link: "https://recovery.zk.email"
   },
   {
-    title: "Blueprint Registry",
+    title: "Redacted",
     description:
-      "List of community submitted ZK Email blueprints to prove different kinds of emails",
-    imgSrc: BlueprintRegistryLogo,
-    link: "https://registry.zk.email"
+      "Prove any sensitive information received on your mail without revealing your identity",
+    imgSrc: WhistleblowLogo,
+    link: "https://redacted.zk.email/"
   },
   {
     title: "ZKP2P",
