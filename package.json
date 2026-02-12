@@ -13,7 +13,7 @@
     "@tailwindcss/typography": "^0.5.15",
     "highlight.js": "^11.10.0",
     "lottie-web": "^5.12.2",
-    "next": "15.0.0",
+    "next": "15.2.3",
     "next-mdx-remote": "^5.0.0",
     "posthog-js": "^1.333.0",
     "react": "19.0.0-rc-65a56d0e-20241020",
