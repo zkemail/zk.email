@@ -49,6 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="ahrefs-site-verification" content="614ed9e619996ef4d03da37f0539303b90c608fe5d20c4368e6b7f671a240065" />
         <link
           rel="icon"
           type="image/svg+xml"
