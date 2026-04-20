@@ -3,7 +3,7 @@ import ChangelogsContent from "./changelogsContent";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "ZK Email | Changelogs",
+  title: "ZK Email Changelogs — Updates and Release Notes",
 };
 
 const Changelog = async () => {

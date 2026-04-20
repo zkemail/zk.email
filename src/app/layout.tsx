@@ -10,9 +10,9 @@ const newsreader = Newsreader({ subsets: ["latin"] });
 const fustat = Fustat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ZK Email",
+  title: "ZK Email — Zero-Knowledge Email Proofs",
   description:
-    "ZK Email lets you make privacy-preserving proofs of your existing emails. You can prove you own an email at some domain, prove attendance at a real-world event, or confirm transactions on chain.",
+    "ZK Email lets you make privacy-preserving proofs of your emails. Prove email ownership, event attendance, or on-chain transactions — no sensitive data revealed.",
   icons: {
     icon: [
       {
