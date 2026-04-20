@@ -1,0 +1,98 @@
+---
+title: "Introducing Redacted"
+date: 2026-03-29T00:00:00.000Z
+type: Post
+draft: false
+recommanded: false
+slug: "redacted"
+category: "5 min read"
+tags: ["redacted", "zk-email", "privacy"]
+description: "Email evidence is broken. Redacted lets you prove an email is real while hiding the parts that should stay private."
+ogImage: "/blog-media/redacted/masked-email-full.jpg"
+---
+
+## Email evidence is broken. We're fixing it.
+
+Every leaked email you've ever seen online was probably a screenshot. Think about that for a second — the most common form of email "proof" is something anyone can fabricate in 30 seconds with inspect element.
+
+Screenshots don't prove anything. They never did.
+
+---
+
+## The problem
+
+When someone needs to share email evidence — a whistleblower, a journalist's source, an employee reporting misconduct — they face an impossible choice:
+
+**Share the full email** and expose their identity, the sender's identity, and every private detail in the thread.
+
+**Share a screenshot** and accept that nobody has any reason to believe it's real.
+
+**Share nothing** and let the truth stay buried.
+
+There has never been a middle ground. Until we built one.
+
+---
+
+## Why now?
+
+Here's something most people don't know: every email sent through Gmail, Outlook, Yahoo, or any major provider is already cryptographically signed. It's a standard called DKIM — email servers use it behind the scenes to prevent spoofing.
+
+That means every email you've ever received already contains a built-in proof of authenticity. The signature is right there in the file. The problem was always: how do you use that signature to prove an email is real *without showing all of it*?
+
+That's exactly what zero-knowledge cryptography makes possible. Verify the signature. Prove the content. Reveal only what you choose.
+
+---
+
+## What Redacted does
+
+Redacted lets you take any email, choose exactly which parts to reveal and which to hide, and produce a cryptographic proof that the revealed parts are genuine and unaltered.
+
+The proof verifies the email's signature — the same one the sender's mail server originally created. A verifier can confirm the visible content is authentic without ever seeing what you've hidden.
+
+**This isn't blacking out text in a PDF.** When you redact content in Redacted, it's not covered up — it's mathematically removed from the proof. No one can recover it. Not us, not the verifier, not anyone.
+
+<p align="center">
+<img src="/blog-media/redacted/step3-proof-generating.jpg" width="750" alt="Masked email with black redaction bars — From and To hidden, Subject and Date visible"/>
+</p>
+
+---
+
+## Your email never leaves your device
+
+The proof generates entirely in your browser. Your email stays in local memory for the session and is gone when you close the tab. The only thing that ever reaches a server is the proof itself.
+
+Even if our infrastructure were compromised, there's nothing sensitive to find.
+
+---
+
+## The verification experience
+
+Anyone with your link can independently verify the proof. They see exactly what you chose to reveal. Everything else appears as solid black blocks. One click tells them whether the email is authentic.
+
+<p align="center">
+<img src="/blog-media/redacted/step4-verified.jpg" width="750" alt="Verification page with green Proof verified successfully! The email content is authentic. banner"/>
+</p>
+
+---
+
+## Who needs this?
+
+**Whistleblowers** — prove you received something without revealing who you are.
+
+**Journalists** — verify a source's email with cryptographic certainty, not just trust.
+
+**Legal teams** — demonstrate email authenticity while protecting privileged content.
+
+**HR** — document workplace issues without exposing the reporter.
+
+**Everyone** — we think the ability to prove truth while protecting privacy is foundational. The infrastructure should exist for anyone who needs it.
+
+---
+
+## Try it
+
+**[redacted.zk.email](https://redacted.zk.email)** — no sign-up, no install, no extensions.
+
+<p align="center">
+<img src="/blog-media/redacted/step0-upload-modal.jpg" width="750" alt="Upload your email to get started"/>
+</p>
