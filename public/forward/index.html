@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Keyword Forwarder — Gmail forwarding without confirmation</title>
+    <meta
+      name="description"
+      content="Forward matching Gmail messages automatically — no recipient confirmation required. Multiple automations, live previews, and simple pricing."
+    />
+    <link rel="canonical" href="https://zk.email/forward/" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #12212b;
+        --muted: #5a6b76;
+        --paper: #f3f6f4;
+        --panel: #ffffff;
+        --line: rgba(18, 33, 43, 0.12);
+        --accent: #0f7a5f;
+        --accent-deep: #0a5744;
+        --glow: #c8ebe0;
+        --shadow: 0 28px 60px rgba(18, 33, 43, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: Outfit, system-ui, sans-serif;
+        background:
+          radial-gradient(1200px 600px at 85% -10%, var(--glow), transparent 55%),
+          radial-gradient(900px 500px at -10% 20%, #dce8f2, transparent 50%),
+          linear-gradient(180deg, #eef3f0 0%, var(--paper) 42%, #e8eee9 100%);
+        min-height: 100vh;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 2.5rem));
+        margin: 0 auto;
+      }
+
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 0 0.5rem;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 0.55rem;
+        overflow: hidden;
+        flex: 0 0 auto;
+      }
+
+      .brand-mark img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .nav {
+        display: flex;
+        gap: 1.25rem;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .nav a {
+        text-decoration: none;
+      }
+
+      .nav a:hover {
+        color: var(--ink);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border-radius: 999px;
+        padding: 0.8rem 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid transparent;
+        transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn-primary {
+        background: var(--ink);
+        color: #fff;
+        box-shadow: 0 10px 24px rgba(18, 33, 43, 0.2);
+      }
+
+      .btn-primary:hover {
+        background: #0b171e;
+      }
+
+      .btn-ghost {
+        background: rgba(255, 255, 255, 0.55);
+        border-color: var(--line);
+        color: var(--ink);
+        backdrop-filter: blur(8px);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 2.5rem;
+        align-items: center;
+        padding: 2.5rem 0 4rem;
+        min-height: calc(100vh - 5rem);
+      }
+
+      .hero h1 {
+        font-family: Fraunces, Georgia, serif;
+        font-size: clamp(2.6rem, 5vw, 4.2rem);
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+        margin: 0 0 1rem;
+        max-width: 12ch;
+      }
+
+      .hero p.lede {
+        font-size: 1.15rem;
+        line-height: 1.55;
+        color: var(--muted);
+        max-width: 34rem;
+        margin: 0 0 1rem;
+      }
+
+      .callout {
+        max-width: 34rem;
+        margin: 0 0 1.75rem;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        background: rgba(15, 122, 95, 0.1);
+        border: 1px solid rgba(15, 122, 95, 0.22);
+        color: var(--accent-deep);
+        font-size: 0.98rem;
+        line-height: 1.45;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .meta {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .phone-shell {
+        justify-self: end;
+        width: min(336px, 100%);
+        border-radius: 28px;
+        background: linear-gradient(160deg, #1c2a33, #0f171d);
+        padding: 12px;
+        box-shadow: var(--shadow);
+        animation: rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .phone-screen {
+        background: #f7faf8;
+        border-radius: 18px;
+        overflow: hidden;
+        min-height: 560px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .phone-chrome {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 0.95rem 0.55rem;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .phone-title {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+
+      .phone-title img {
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 0.3rem;
+      }
+
+      .dots {
+        display: flex;
+        gap: 0.25rem;
+      }
+
+      .dots span {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #9aabb4;
+      }
+
+      .addon {
+        padding: 0.85rem;
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .block {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.75rem 0.8rem;
+      }
+
+      .block h3 {
+        margin: 0 0 0.45rem;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .block p {
+        margin: 0;
+        font-size: 0.86rem;
+        line-height: 1.4;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border-radius: 999px;
+        padding: 0.2rem 0.55rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        background: #e4f4ee;
+        color: var(--accent-deep);
+      }
+
+      .rule {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .rule-meta {
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      .price-chip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .upgrade {
+        margin-top: 0.55rem;
+        width: 100%;
+        border: 0;
+        border-radius: 8px;
+        padding: 0.55rem;
+        background: var(--ink);
+        color: #fff;
+        font: inherit;
+        font-size: 0.82rem;
+        font-weight: 600;
+      }
+
+      section.panel {
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: clamp(1.5rem, 3vw, 2.5rem);
+        margin-bottom: 1.5rem;
+        backdrop-filter: blur(10px);
+      }
+
+      section.panel h2 {
+        font-family: Fraunces, Georgia, serif;
+        font-size: clamp(1.7rem, 3vw, 2.3rem);
+        letter-spacing: -0.02em;
+        margin: 0 0 0.5rem;
+      }
+
+      section.panel > p {
+        color: var(--muted);
+        margin: 0 0 1.5rem;
+        max-width: 42rem;
+        line-height: 1.5;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .feature {
+        padding: 1rem 0.2rem 0.2rem;
+      }
+
+      .feature strong {
+        display: block;
+        font-size: 1.05rem;
+        margin-bottom: 0.35rem;
+        letter-spacing: -0.01em;
+      }
+
+      .feature span {
+        color: var(--muted);
+        line-height: 1.45;
+        font-size: 0.95rem;
+      }
+
+      .pricing {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .plan {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 1.25rem 1.3rem;
+      }
+
+      .plan.featured {
+        border-color: rgba(15, 122, 95, 0.45);
+        box-shadow: 0 0 0 1px rgba(15, 122, 95, 0.15), 0 16px 36px rgba(15, 122, 95, 0.08);
+      }
+
+      .plan h3 {
+        margin: 0;
+        font-size: 1.05rem;
+      }
+
+      .plan .amount {
+        font-family: Fraunces, Georgia, serif;
+        font-size: 2.4rem;
+        letter-spacing: -0.03em;
+        margin: 0.4rem 0 0.15rem;
+      }
+
+      .plan .amount small {
+        font-family: Outfit, sans-serif;
+        font-size: 0.95rem;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .plan ul {
+        margin: 1rem 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .plan li {
+        display: flex;
+        gap: 0.5rem;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .plan li::before {
+        content: '';
+        width: 0.55rem;
+        height: 0.55rem;
+        margin-top: 0.4rem;
+        border-radius: 50%;
+        background: var(--accent);
+        flex: 0 0 auto;
+      }
+
+      footer {
+        padding: 2rem 0 3rem;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        font-size: 0.92rem;
+      }
+
+      footer a {
+        color: var(--ink);
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          min-height: auto;
+          padding-top: 1.5rem;
+        }
+
+        .phone-shell {
+          justify-self: start;
+        }
+
+        .features,
+        .pricing {
+          grid-template-columns: 1fr;
+        }
+
+        .nav .hide-sm {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <a class="brand" href="./">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="icon.svg" alt="" width="32" height="32" />
+          </span>
+          Keyword Forwarder
+        </a>
+        <nav class="nav">
+          <a class="hide-sm" href="#features">Features</a>
+          <a class="hide-sm" href="#pricing">Pricing</a>
+          <a class="btn btn-ghost" href="https://github.com/Divide-By-0/gmail-forwarder#install-on-an-inbox"
+            >Install</a
+          >
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div>
+            <h1>Forward Gmail without the confirmation dance.</h1>
+            <p class="lede">
+              A Gmail add-on that watches for keywords or search queries and
+              forwards matching messages to any address you choose.
+            </p>
+            <p class="callout">
+              Unlike Gmail’s built-in forwarding, the recipient does
+              <strong>not</strong> need to click a confirmation email. That
+              blocker is the reason most auto-forward setups fail — this one
+              skips it entirely.
+            </p>
+            <div class="cta-row">
+              <a
+                class="btn btn-primary"
+                href="https://github.com/Divide-By-0/gmail-forwarder#install-on-an-inbox"
+                >Get the add-on</a
+              >
+              <a class="btn btn-ghost" href="#pricing">See pricing</a>
+            </div>
+            <p class="meta">Works in the Gmail sidebar · Free tier included</p>
+          </div>
+
+          <aside class="phone-shell" aria-label="Add-on preview">
+            <div class="phone-screen">
+              <div class="phone-chrome">
+                <div class="phone-title">
+                  <img src="icon.svg" alt="" width="20" height="20" />
+                  Keyword Forwarder
+                </div>
+                <div class="dots" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="addon">
+                <div class="block">
+                  <h3>Schedule</h3>
+                  <p>Every hour · Next run: today at 4:00 PM</p>
+                  <p style="margin-top: 0.45rem">
+                    <span class="pill">Every 5 min</span>
+                    <span class="pill" style="background: #12212b; color: #fff"
+                      >Every hour</span
+                    >
+                    <span class="pill">Once a day</span>
+                  </p>
+                </div>
+                <div class="block">
+                  <h3>Automations</h3>
+                  <p class="rule">invoice → ops@company.com</p>
+                  <p class="rule-meta">This week: 12 · Pending: 1</p>
+                  <p class="rule" style="margin-top: 0.7rem">
+                    from:alerts@bank.com → me@personal.com
+                  </p>
+                  <p class="rule-meta">This week: 3 · Pending: 0</p>
+                </div>
+                <div class="block">
+                  <h3>Plan</h3>
+                  <div class="price-chip">
+                    <span>Free · 2 / 5 forwards used</span>
+                    <span class="pill">$5/mo Pro</span>
+                  </div>
+                  <button class="upgrade" type="button" tabindex="-1">
+                    Upgrade · $5/month
+                  </button>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="panel" id="features">
+          <h2>Built for inboxes that never stop.</h2>
+          <p>
+            Set rules once. Keyword Forwarder keeps checking on your schedule
+            and tags processed threads so nothing gets forwarded twice — and
+            without asking the destination inbox to approve anything.
+          </p>
+          <div class="features">
+            <div class="feature">
+              <strong>No recipient confirmation</strong>
+              <span
+                >Gmail’s native forward requires the other mailbox to confirm.
+                This add-on sends the message for you, so that step never
+                happens.</span
+              >
+            </div>
+            <div class="feature">
+              <strong>Multiple automations</strong>
+              <span
+                >Separate keyword/search → destination rules, each with its own
+                stats and enable switch.</span
+              >
+            </div>
+            <div class="feature">
+              <strong>Live match preview</strong>
+              <span
+                >See the latest emails a new filter would forward before you
+                save it.</span
+              >
+            </div>
+            <div class="feature">
+              <strong>Your cadence</strong>
+              <span
+                >Check every 5 minutes, every hour, or once a day — pick what
+                fits the urgency.</span
+              >
+            </div>
+            <div class="feature">
+              <strong>Gmail search power</strong>
+              <span
+                >Plain keywords or full Gmail queries like
+                <code>from:alerts@bank.com</code>.</span
+              >
+            </div>
+            <div class="feature">
+              <strong>No double-sends</strong>
+              <span
+                >Processed threads get a private label so reruns stay
+                idempotent.</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="pricing">
+          <h2>Simple pricing.</h2>
+          <p>Try it free. Upgrade when you outgrow five forwards a month.</p>
+          <div class="pricing">
+            <div class="plan">
+              <h3>Free</h3>
+              <div class="amount">$0 <small>/ month</small></div>
+              <ul>
+                <li>5 forwarded messages per month</li>
+                <li>Unlimited automations</li>
+                <li>Schedule: 5 min, hourly, or daily</li>
+              </ul>
+            </div>
+            <div class="plan featured">
+              <h3>Pro</h3>
+              <div class="amount">$5 <small>/ month</small></div>
+              <ul>
+                <li>Unlimited forwards</li>
+                <li>Same automations &amp; schedules</li>
+                <li>Cancel anytime in Stripe</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>Keyword Forwarder · a ZK Email project</span>
+        <span>
+          <a href="https://github.com/Divide-By-0/gmail-forwarder">GitHub</a>
+          ·
+          <a href="./privacy.html">Privacy</a>
+          ·
+          <a href="./terms.html">Terms</a>
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>
