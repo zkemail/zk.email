@@ -8,6 +8,7 @@
       name="description"
       content="Forward matching Gmail messages automatically — no recipient confirmation required. Multiple automations, live previews, and simple pricing."
     />
+    <meta name="color-scheme" content="light only" />
     <link rel="canonical" href="https://zk.email/forward/" />
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
@@ -37,13 +38,15 @@
 
       html {
         scroll-behavior: smooth;
+        color-scheme: light only;
       }
 
       body {
         margin: 0;
         color: var(--ink);
         font-family: Outfit, system-ui, sans-serif;
-        background:
+        background-color: var(--paper);
+        background-image:
           radial-gradient(1200px 600px at 85% -10%, var(--glow), transparent 55%),
           radial-gradient(900px 500px at -10% 20%, #dce8f2, transparent 50%),
           linear-gradient(180deg, #eef3f0 0%, var(--paper) 42%, #e8eee9 100%);
@@ -148,6 +151,16 @@
         min-height: calc(100vh - 5rem);
       }
 
+      .hero-copy {
+        padding: clamp(1.25rem, 3vw, 1.75rem);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(18, 33, 43, 0.1);
+        box-shadow: 0 12px 40px rgba(18, 33, 43, 0.08);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+
       .hero h1 {
         font-family: Fraunces, Georgia, serif;
         font-size: clamp(2.6rem, 5vw, 4.2rem);
@@ -155,12 +168,13 @@
         letter-spacing: -0.035em;
         margin: 0 0 1rem;
         max-width: 12ch;
+        color: #12212b;
       }
 
       .hero p.lede {
         font-size: 1.15rem;
         line-height: 1.55;
-        color: var(--muted);
+        color: #3d4f5a;
         max-width: 34rem;
         margin: 0 0 1rem;
       }
@@ -170,9 +184,9 @@
         margin: 0 0 1.75rem;
         padding: 0.85rem 1rem;
         border-radius: 12px;
-        background: rgba(15, 122, 95, 0.1);
-        border: 1px solid rgba(15, 122, 95, 0.22);
-        color: var(--accent-deep);
+        background: rgba(15, 122, 95, 0.12);
+        border: 1px solid rgba(15, 122, 95, 0.28);
+        color: #084a3a;
         font-size: 0.98rem;
         line-height: 1.45;
       }
@@ -185,7 +199,7 @@
       }
 
       .meta {
-        color: var(--muted);
+        color: #4a5c68;
         font-size: 0.92rem;
       }
 
@@ -488,7 +502,7 @@
 
       <main>
         <section class="hero">
-          <div>
+          <div class="hero-copy">
             <h1>Forward Gmail without the confirmation dance.</h1>
             <p class="lede">
               A Gmail add-on that watches for keywords or search queries and
