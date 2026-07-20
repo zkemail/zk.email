@@ -52,6 +52,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/forward",
+        destination: "/forward/",
+        permanent: true,
+      },
+      {
         source: "/:path*",
         has: [
           {
