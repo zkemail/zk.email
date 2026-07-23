@@ -1,0 +1,45 @@
+# Approaches to Anonymous Speech and Whistleblowing
+
+## Background
+
+We've seen a number of attempts at anonymous speech lie along a broad variety and spectrum, that enable an interesting variety of interactions from unknown social interactions to surfacing unknown truths. We saw the location based per-post anonymity of YikYak fold under moderation issues, and we see the relative success of dedicated community moderators on Reddit. We've seen Twitter use Community Notes to try to fix anonymous misinformation to some extent (at the same time, many notes settle too late, and the system falls prey to AIs that can bypass its phone number verification). We've seen Facebook that's got real names but no verification and certainly rampant bots, fold its likely expensive fact checking program the moment regulatory pressure lifted. 
+
+There's platforms built specifically around anonymous speech with partial verification, like Blind and Glassdoor -- they often surface valuable insights around salaries, but have folded anonymity under regulatory pressure placed by the accused company [ADD LINK]. There's RateMyProfessor and MITConfessions, which helps surface similar insights in universities and schools. But we haven't seen the same ideas extend to other places that I think fact checking can be valuable: we'd expect more i.e. academic paper discourse, but for some reason burner account Twitter comments aren't common, even though it's well known that certain professors or works have real concerns. This distorts the environment of scientific truth, and has famously led to misaligned billions of Alzheimers funds for invalid theses.
+
+There are whistleblowing specific platforms like Securedrop and Globalleaks [WHAT DO THEY DO], that enable secure and anonymous communication for whistleblowers. There is also a set of odd, EU-legislation enabled, closed source platforms for whistleblowing that have 0 accountability or auditability.
+
+Anonymity can be good; but YikYak and so many others showed that without moderation, it can get very bad very fast. We share some subtle insights from ZK Email around tools that can be used to build these platforms anew -- from identity verification, to moderation, to deep whistleblowing technology.
+
+## Verifying Identity Privately
+
+Private identity verification from our perspective falls into a few main categories: verifying current affiliation via JWTs, verifying subsets of identity through i.e. zk emails or mpctls/zktls, and verifying passports and digital ID cards.
+
+[what the hell is anon on farcaster]
+
+### JWTs
+
+JWT verification falls on a spectrum, from vanilla verification (easiest, used by most platforms today), to verification of a, say, Gmail sign in (needs ZK but we have prototypes already, but reveals to Google and a malicious frontend/Chrome extension that a person signed into the app), to verification of a Gmail sign in where users input their own oauth keys (much more complex, where would they even get those keys), to verification of a sign-in the user already did in another context (no tracability, gold standard, but can be hard to get that value out of the target website).
+
+### ZK Email and ZK TLS/Proxy
+
+[separate post?]
+
+The tradeoffs of ZK Email and TLS Notary or TLS Proxy style approaches hasn't really been explained very much. All of them are extremely powerful, but offer different affordances and ease of use.
+
+ZK Email
+- User can do many proofs of many services, with a single sign in, on both mobile and desktop. But they must give access to their inbox (although email metadata only would work for most cases)
+- User can only prove data that they can get an email of
+- User can prove historical data they don't have access to anymore, but have an email of
+- User only has to trust the sender domain of the email, no third party. They must trust the public key oracle if used on-chain
+
+TLS Notary/Proxy
+- User must sign in for each service, either entering username and password into i.e. a TEE for the flow, or using a Chrome extension on an existing sign in
+- User can prove any data on any site
+- User can only prove data from sites they have an active login for, not historical data (i.e. past employment)
+- User must trust the notary or proxy, or the system of economic security built atop the notaries
+
+## Whistleblowing Insights
+
+We recently spoke to someone who had experience working with extremely high profile leakers and whistleblowing organizations like Wikileaks. 
+
+[insert ai summary of chat]
